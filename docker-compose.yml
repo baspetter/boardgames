@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-boardgames}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-boardgames}
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -22,7 +22,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-boardgames}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-boardgames}
-      AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET in .env, e.g. via 'openssl rand -base64 32'}
+      AUTH_SECRET: ${AUTH_SECRET}
       AUTH_URL: ${AUTH_URL:-http://localhost:3000}
       SEED_INVITE_CODE: ${SEED_INVITE_CODE:-}
     ports:
