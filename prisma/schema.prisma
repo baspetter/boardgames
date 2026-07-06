@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlayGroupRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id             String            @id @default(cuid())
+  email          String            @unique
+  username       String            @unique
+  passwordHash   String
+  createdAt      DateTime          @default(now())
+  memberships    PlayGroupMember[]
+  collection     CollectionEntry[]
+  createdGroups  PlayGroup[]       @relation("PlayGroupCreator")
+  usedInviteCode InviteCode?       @relation("InviteCodeUser", fields: [inviteCodeId], references: [id])
+  inviteCodeId   String?
+}
+
+model InviteCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  maxUses   Int       @default(1)
+  usesCount Int       @default(0)
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  users     User[]    @relation("InviteCodeUser")
+}
+
+model PlayGroup {
+  id          String            @id @default(cuid())
+  name        String
+  inviteCode  String            @unique
+  createdBy   User              @relation("PlayGroupCreator", fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime          @default(now())
+  members     PlayGroupMember[]
+}
+
+model PlayGroupMember {
+  id          String        @id @default(cuid())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  playGroup   PlayGroup     @relation(fields: [playGroupId], references: [id], onDelete: Cascade)
+  playGroupId String
+  role        PlayGroupRole @default(MEMBER)
+  joinedAt    DateTime      @default(now())
+
+  @@unique([userId, playGroupId])
+}
+
+model Game {
+  id            String            @id @default(cuid())
+  bggId         Int               @unique
+  name          String
+  yearPublished Int?
+  image         String?
+  thumbnail     String?
+  description   String?
+  minPlayers    Int?
+  maxPlayers    Int?
+  playingTime   Int?
+  minPlayTime   Int?
+  maxPlayTime   Int?
+  minAge        Int?
+  weight        Float?
+  bggRating     Float?
+  bggRank       Int?
+  categories    String[]
+  mechanics     String[]
+  designers     Json
+  artists       Json
+  cachedAt      DateTime          @default(now())
+  collection    CollectionEntry[]
+}
+
+model CollectionEntry {
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  game     Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId   String
+  notes    String?
+  addedAt  DateTime @default(now())
+
+  @@unique([userId, gameId])
+}
