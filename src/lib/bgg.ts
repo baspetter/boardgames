@@ -19,19 +19,17 @@ async function fetchWithRetry(url: string, attempts = 5, delayMs = 1500): Promis
       headers: {
         Accept: "application/xml,text/xml,*/*",
         "Accept-Language": "en-US,en;q=0.9",
-        // BGG sits behind Cloudflare, which blocks requests that look
-        // scripted (a custom/non-browser User-Agent is enough to get a
-        // 401/403). A common desktop browser UA avoids that.
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
       },
     });
-    if (res.status === 202 || res.status === 401 || res.status === 403 || res.status === 429) {
-      // BGG queued the request (202), or Cloudflare/rate-limiting briefly
-      // blocked it (401/403/429) — both are worth a short backoff+retry.
+    if (res.status === 202) {
+      // BGG queued the request for processing (documented behavior); wait and retry.
       await new Promise((r) => setTimeout(r, delayMs));
       continue;
     }
+    // 401/403/429 are BGG's own abuse/rate-limit protection, not a transient
+    // hiccup — retrying immediately only makes it worse. Fail fast instead.
     if (!res.ok) {
       throw new Error(`BGG request failed (${res.status}): ${url}`);
     }
