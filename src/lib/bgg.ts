@@ -13,7 +13,31 @@ function asArray<T>(value: T | T[] | undefined | null): T[] {
   return Array.isArray(value) ? value : [value];
 }
 
+// Serializes every outgoing BGG request (across all users/requests hitting
+// this server) and spaces them at least MIN_INTERVAL_MS apart, so concurrent
+// searches/adds from multiple people can never burst BGG and trip its abuse
+// protection the way a naive retry loop did before.
+const MIN_INTERVAL_MS = 2000;
+let bggQueue: Promise<unknown> = Promise.resolve();
+let lastRequestAt = 0;
+
+function throttled<T>(fn: () => Promise<T>): Promise<T> {
+  const result = bggQueue.then(async () => {
+    const wait = Math.max(0, lastRequestAt + MIN_INTERVAL_MS - Date.now());
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    lastRequestAt = Date.now();
+    return fn();
+  });
+  // Keep the queue alive even if this particular request fails.
+  bggQueue = result.catch(() => undefined);
+  return result;
+}
+
 async function fetchWithRetry(url: string, attempts = 5, delayMs = 1500): Promise<string> {
+  return throttled(() => fetchOnce(url, attempts, delayMs));
+}
+
+async function fetchOnce(url: string, attempts: number, delayMs: number): Promise<string> {
   for (let i = 0; i < attempts; i++) {
     const res = await fetch(url, {
       headers: {
