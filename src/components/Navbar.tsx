@@ -8,8 +8,8 @@ export default async function Navbar() {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-6 border-b border-white/5 bg-background/95 px-6 py-3 backdrop-blur">
       <div className="flex items-center gap-6">
-        <Link href="/" className="text-lg font-bold tracking-tight text-accent">
-          BoardGames
+        <Link href="/" className="text-lg font-bold tracking-tight text-accent whitespace-nowrap">
+          For the Love of Boardgames
         </Link>
         <nav className="flex gap-4 text-sm text-white/70">
           <Link href="/" className="hover:text-white">

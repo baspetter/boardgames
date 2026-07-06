@@ -1,4 +1,4 @@
-# BoardGames
+# For the Love of Boardgames
 
 Zelf-gehoste bordspellencollectie voor jou en je speelgroep. Zoek spellen op via
 BoardGameGeek (BGG), houd je eigen collectie bij, deel 'm met een of meerdere

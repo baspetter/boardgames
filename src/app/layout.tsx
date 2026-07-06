@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BoardGames",
+  title: "For the Love of Boardgames",
   description: "Bordspellencollectie voor jou en je speelgroep",
 };
 
