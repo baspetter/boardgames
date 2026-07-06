@@ -162,3 +162,17 @@ export function howToPlayYoutubeUrl(gameName: string): string {
   const query = encodeURIComponent(`${gameName} how to play`);
   return `https://www.youtube.com/results?search_query=${query}`;
 }
+
+/**
+ * Extracts a BGG id from a pasted boardgamegeek.com URL
+ * (e.g. https://boardgamegeek.com/boardgame/13/catan) or a bare numeric id.
+ * Returns null if nothing recognizable was found.
+ */
+export function extractBggId(input: string): number | null {
+  const trimmed = input.trim();
+  if (/^\d+$/.test(trimmed)) {
+    return Number(trimmed);
+  }
+  const match = trimmed.match(/boardgame(?:expansion)?\/(\d+)/i);
+  return match ? Number(match[1]) : null;
+}
