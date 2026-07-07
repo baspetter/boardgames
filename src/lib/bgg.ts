@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import { getCfSession, invalidateCfSession } from "@/lib/flaresolverr";
 
 const BGG_BASE = "https://boardgamegeek.com/xmlapi2";
 
@@ -38,13 +39,15 @@ async function fetchWithRetry(url: string, attempts = 5, delayMs = 1500): Promis
 }
 
 async function fetchOnce(url: string, attempts: number, delayMs: number): Promise<string> {
+  let sessionRetried = false;
   for (let i = 0; i < attempts; i++) {
+    const session = await getCfSession();
     const res = await fetch(url, {
       headers: {
         Accept: "application/xml,text/xml,*/*",
         "Accept-Language": "en-US,en;q=0.9",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "User-Agent": session.userAgent,
+        Cookie: session.cookieHeader,
       },
     });
     if (res.status === 202) {
@@ -52,8 +55,13 @@ async function fetchOnce(url: string, attempts: number, delayMs: number): Promis
       await new Promise((r) => setTimeout(r, delayMs));
       continue;
     }
-    // 401/403/429 are BGG's own abuse/rate-limit protection, not a transient
-    // hiccup — retrying immediately only makes it worse. Fail fast instead.
+    if ((res.status === 401 || res.status === 403) && !sessionRetried) {
+      // Our Cloudflare session cookie is stale/invalid — solve the
+      // challenge fresh via FlareSolverr once and retry with it.
+      invalidateCfSession();
+      sessionRetried = true;
+      continue;
+    }
     if (!res.ok) {
       throw new Error(`BGG request failed (${res.status}): ${url}`);
     }

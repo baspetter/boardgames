@@ -82,7 +82,16 @@ npm run dev
 ## Tech stack
 
 Next.js (App Router, TypeScript), Tailwind CSS, PostgreSQL + Prisma, Auth.js (Credentials
-provider), BoardGameGeek XML API2.
+provider), BoardGameGeek XML API2, FlareSolverr.
+
+### Waarom FlareSolverr?
+
+BGG's API zit achter Cloudflare, dat verzoeken zonder geldige sessie/cookies kan blokkeren
+(401/403) — dit trof zowel losse `curl`-verzoeken als de app zelf, structureel en niet
+tijdelijk. FlareSolverr draait als aparte container met een echte (headless) browser die deze
+check oplost; de app hergebruikt vervolgens de daaruit voortkomende cookies voor lichte,
+directe verzoeken aan de BGG API (niet elk verzoek gaat via de browser, alleen het verkrijgen
+van een geldige sessie).
 
 ## Roadmap / bewust nog niet gebouwd
 
