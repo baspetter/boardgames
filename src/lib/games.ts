@@ -59,3 +59,28 @@ export async function getOrCacheGame(bggId: number) {
     },
   });
 }
+
+export interface ManualGameInput {
+  name: string;
+  image?: string;
+  description?: string;
+  minPlayers?: number;
+  maxPlayers?: number;
+  playingTime?: number;
+  howToPlayUrl?: string;
+}
+
+export async function createManualGame(input: ManualGameInput) {
+  return prisma.game.create({
+    data: {
+      isManual: true,
+      name: input.name,
+      image: input.image,
+      description: input.description,
+      minPlayers: input.minPlayers,
+      maxPlayers: input.maxPlayers,
+      playingTime: input.playingTime,
+      howToPlayUrl: input.howToPlayUrl,
+    },
+  });
+}

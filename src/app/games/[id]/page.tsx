@@ -34,25 +34,29 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
         <div className="mt-4 flex flex-col gap-2">
           {myEntry ? (
             <RemoveGameButton gameId={game.id} />
-          ) : (
+          ) : game.bggId ? (
             <AddToCollectionButton bggId={game.bggId} />
+          ) : (
+            <AddToCollectionButton gameId={game.id} />
           )}
           <a
-            href={howToPlayYoutubeUrl(game.name)}
+            href={game.howToPlayUrl || howToPlayYoutubeUrl(game.name)}
             target="_blank"
             rel="noreferrer"
             className="rounded bg-surfaceHover px-4 py-2 text-center font-semibold hover:bg-white/20"
           >
             ▶ How to play
           </a>
-          <a
-            href={`https://boardgamegeek.com/boardgame/${game.bggId}`}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded px-4 py-2 text-center text-sm text-white/50 hover:text-white"
-          >
-            Bekijk op BoardGameGeek
-          </a>
+          {game.bggId && (
+            <a
+              href={`https://boardgamegeek.com/boardgame/${game.bggId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded px-4 py-2 text-center text-sm text-white/50 hover:text-white"
+            >
+              Bekijk op BoardGameGeek
+            </a>
+          )}
         </div>
       </div>
 

@@ -60,7 +60,8 @@ model PlayGroupMember {
 
 model Game {
   id            String            @id @default(cuid())
-  bggId         Int               @unique
+  bggId         Int?              @unique
+  isManual      Boolean           @default(false)
   name          String
   yearPublished Int?
   image         String?
@@ -75,10 +76,11 @@ model Game {
   weight        Float?
   bggRating     Float?
   bggRank       Int?
-  categories    String[]
-  mechanics     String[]
-  designers     Json
-  artists       Json
+  categories    String[]          @default([])
+  mechanics     String[]          @default([])
+  designers     Json              @default("[]")
+  artists       Json              @default("[]")
+  howToPlayUrl  String?
   cachedAt      DateTime          @default(now())
   collection    CollectionEntry[]
 }

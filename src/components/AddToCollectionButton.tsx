@@ -3,7 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function AddToCollectionButton({ bggId }: { bggId: number }) {
+type Props = { bggId: number; gameId?: never } | { gameId: string; bggId?: never };
+
+export default function AddToCollectionButton(props: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +15,7 @@ export default function AddToCollectionButton({ bggId }: { bggId: number }) {
       await fetch("/api/collection", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bggId }),
+        body: JSON.stringify("bggId" in props ? { bggId: props.bggId } : { gameId: props.gameId }),
       });
       router.refresh();
     } finally {

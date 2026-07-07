@@ -4,9 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/current-user";
 import { getOrCacheGame } from "@/lib/games";
 
-const addSchema = z.object({
-  bggId: z.number().int().positive(),
-});
+const addSchema = z.union([
+  z.object({ bggId: z.number().int().positive() }),
+  z.object({ gameId: z.string().min(1) }),
+]);
 
 export async function GET() {
   const userId = await requireUserId();
@@ -28,7 +29,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
 
-  const game = await getOrCacheGame(parsed.data.bggId);
+  const game =
+    "bggId" in parsed.data
+      ? await getOrCacheGame(parsed.data.bggId)
+      : await prisma.game.findUnique({ where: { id: parsed.data.gameId } });
+
+  if (!game) {
+    return NextResponse.json({ error: "Spel niet gevonden" }, { status: 404 });
+  }
 
   const entry = await prisma.collectionEntry.upsert({
     where: { userId_gameId: { userId, gameId: game.id } },
