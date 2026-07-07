@@ -38,6 +38,12 @@ cp .env.example .env
   eigen domeinnaam als je een reverse proxy gebruikt).
 - `SEED_INVITE_CODE` (optioneel): zet een vaste eerste uitnodigingscode, anders wordt er een
   willekeurige gegenereerd en getoond in de logs bij de eerste start.
+- `BGG_API_TOKEN`: **vereist voor het zoeken/toevoegen van spellen.** BoardGameGeek vereist een
+  geregistreerde, goedgekeurde applicatie met een Authorization-token voor API-toegang. Ga naar
+  https://boardgamegeek.com/applications, registreer een applicatie (kies "Non-commercial"),
+  wacht op goedkeuring (dit kan een week of langer duren), maak daarna onder "Tokens" een token
+  aan voor je applicatie, en zet die hier. Zonder dit token krijg je op elk BGG-verzoek een
+  duidelijke foutmelding in de logs — de rest van de app werkt gewoon door.
 
 ### 3. Starten via Container Manager
 
@@ -82,16 +88,7 @@ npm run dev
 ## Tech stack
 
 Next.js (App Router, TypeScript), Tailwind CSS, PostgreSQL + Prisma, Auth.js (Credentials
-provider), BoardGameGeek XML API2, FlareSolverr.
-
-### Waarom FlareSolverr?
-
-BGG's API zit achter Cloudflare, dat verzoeken zonder geldige sessie/cookies kan blokkeren
-(401/403) — dit trof zowel losse `curl`-verzoeken als de app zelf, structureel en niet
-tijdelijk. FlareSolverr draait als aparte container met een echte (headless) browser die deze
-check oplost; de app hergebruikt vervolgens de daaruit voortkomende cookies voor lichte,
-directe verzoeken aan de BGG API (niet elk verzoek gaat via de browser, alleen het verkrijgen
-van een geldige sessie).
+provider), BoardGameGeek XML API2.
 
 ## Roadmap / bewust nog niet gebouwd
 

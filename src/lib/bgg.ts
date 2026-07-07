@@ -1,7 +1,12 @@
 import { XMLParser } from "fast-xml-parser";
-import { getCfSession, invalidateCfSession } from "@/lib/flaresolverr";
 
 const BGG_BASE = "https://boardgamegeek.com/xmlapi2";
+
+// BGG requires a registered, approved application and an Authorization:
+// Bearer token for API access (see https://boardgamegeek.com/using_the_xml_api).
+// Register at https://boardgamegeek.com/applications, then create a token
+// there and set it as BGG_API_TOKEN.
+const BGG_API_TOKEN = process.env.BGG_API_TOKEN;
 
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -39,27 +44,25 @@ async function fetchWithRetry(url: string, attempts = 5, delayMs = 1500): Promis
 }
 
 async function fetchOnce(url: string, attempts: number, delayMs: number): Promise<string> {
-  let sessionRetried = false;
+  if (!BGG_API_TOKEN) {
+    throw new Error(
+      "BGG_API_TOKEN is not set. BoardGameGeek requires a registered, approved application " +
+        "with an Authorization: Bearer token (see https://boardgamegeek.com/using_the_xml_api) " +
+        "— register at https://boardgamegeek.com/applications, create a token, and set " +
+        "BGG_API_TOKEN in your .env."
+    );
+  }
   for (let i = 0; i < attempts; i++) {
-    const session = await getCfSession();
     const res = await fetch(url, {
       headers: {
         Accept: "application/xml,text/xml,*/*",
-        "Accept-Language": "en-US,en;q=0.9",
-        "User-Agent": session.userAgent,
-        Cookie: session.cookieHeader,
+        "User-Agent": "ForTheLoveOfBoardgames/1.0 (self-hosted board game collection app)",
+        Authorization: `Bearer ${BGG_API_TOKEN}`,
       },
     });
     if (res.status === 202) {
       // BGG queued the request for processing (documented behavior); wait and retry.
       await new Promise((r) => setTimeout(r, delayMs));
-      continue;
-    }
-    if ((res.status === 401 || res.status === 403) && !sessionRetried) {
-      // Our Cloudflare session cookie is stale/invalid — solve the
-      // challenge fresh via FlareSolverr once and retry with it.
-      invalidateCfSession();
-      sessionRetried = true;
       continue;
     }
     if (!res.ok) {

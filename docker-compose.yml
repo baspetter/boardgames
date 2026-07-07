@@ -14,28 +14,18 @@ services:
       timeout: 5s
       retries: 10
 
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    restart: unless-stopped
-    environment:
-      LOG_LEVEL: info
-    ports:
-      - "${FLARESOLVERR_PORT:-8191}:8191"
-
   app:
     build: .
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
-      flaresolverr:
-        condition: service_started
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-boardgames}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-boardgames}
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_URL: ${AUTH_URL:-http://localhost:3000}
       SEED_INVITE_CODE: ${SEED_INVITE_CODE:-}
-      FLARESOLVERR_URL: http://flaresolverr:8191/v1
+      BGG_API_TOKEN: ${BGG_API_TOKEN:-}
     ports:
       - "${APP_PORT:-3000}:3000"
 
