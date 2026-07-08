@@ -113,6 +113,7 @@ export interface BggGameDetails {
   description?: string;
   minPlayers?: number;
   maxPlayers?: number;
+  bestPlayers?: number;
   playingTime?: number;
   minPlayTime?: number;
   maxPlayTime?: number;
@@ -124,6 +125,32 @@ export interface BggGameDetails {
   mechanics: string[];
   designers: BggLinkRef[];
   artists: BggLinkRef[];
+}
+
+// Finds the player count with the most "Best" votes in BGG's
+// "suggested_numplayers" poll. Ignores the open-ended "N+" bucket since it
+// doesn't represent a single player count.
+function getBestPlayerCount(item: any): number | undefined {
+  const polls = asArray<any>(item.poll);
+  const poll = polls.find((p) => p.name === "suggested_numplayers");
+  if (!poll) return undefined;
+
+  const resultsList = asArray<any>(poll.results);
+  let best: { numplayers: number; votes: number } | undefined;
+
+  for (const results of resultsList) {
+    const numplayers = Number(results.numplayers);
+    if (!Number.isFinite(numplayers)) continue; // skips the "N+" bucket
+
+    const options = asArray<any>(results.result);
+    const bestVotes = Number(options.find((o) => o.value === "Best")?.numvotes ?? 0);
+
+    if (!best || bestVotes > best.votes) {
+      best = { numplayers, votes: bestVotes };
+    }
+  }
+
+  return best && best.votes > 0 ? best.numplayers : undefined;
 }
 
 function decodeHtmlEntities(text: string): string {
@@ -171,6 +198,7 @@ export async function getGameDetails(bggId: number): Promise<BggGameDetails> {
     description: item.description ? decodeHtmlEntities(String(item.description)) : undefined,
     minPlayers: item.minplayers?.value ? Number(item.minplayers.value) : undefined,
     maxPlayers: item.maxplayers?.value ? Number(item.maxplayers.value) : undefined,
+    bestPlayers: getBestPlayerCount(item),
     playingTime: item.playingtime?.value ? Number(item.playingtime.value) : undefined,
     minPlayTime: item.minplaytime?.value ? Number(item.minplaytime.value) : undefined,
     maxPlayTime: item.maxplaytime?.value ? Number(item.maxplaytime.value) : undefined,

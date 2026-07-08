@@ -69,6 +69,7 @@ model Game {
   description   String?
   minPlayers    Int?
   maxPlayers    Int?
+  bestPlayers   Int?
   playingTime   Int?
   minPlayTime   Int?
   maxPlayTime   Int?

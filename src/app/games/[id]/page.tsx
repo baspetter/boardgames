@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -7,6 +6,8 @@ import { getVisibleOwners } from "@/lib/collections";
 import { bggArtistUrl, bggDesignerUrl, howToPlayYoutubeUrl } from "@/lib/bgg";
 import RemoveGameButton from "@/components/RemoveGameButton";
 import AddToCollectionButton from "@/components/AddToCollectionButton";
+import EditGameButton from "@/components/EditGameButton";
+import RefreshBggButton from "@/components/RefreshBggButton";
 
 export default async function GameDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const userId = await requireUserId();
@@ -26,10 +27,15 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-[320px_1fr]">
       <div>
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-surface">
+        <div className="w-full overflow-hidden rounded-lg bg-surface">
           {game.image ? (
-            <Image src={game.image} alt={game.name} fill sizes="320px" className="object-cover" />
-          ) : null}
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={game.image} alt={game.name} className="block w-full h-auto" />
+          ) : (
+            <div className="flex aspect-[3/4] items-center justify-center text-sm text-white/40">
+              Geen afbeelding
+            </div>
+          )}
         </div>
         <div className="mt-4 flex flex-col gap-2">
           {myEntry ? (
@@ -47,6 +53,22 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
           >
             ▶ How to play
           </a>
+          <EditGameButton
+            game={{
+              id: game.id,
+              name: game.name,
+              image: game.image,
+              description: game.description,
+              yearPublished: game.yearPublished,
+              minPlayers: game.minPlayers,
+              maxPlayers: game.maxPlayers,
+              bestPlayers: game.bestPlayers,
+              playingTime: game.playingTime,
+              weight: game.weight,
+              howToPlayUrl: game.howToPlayUrl,
+            }}
+          />
+          {game.bggId && <RefreshBggButton gameId={game.id} />}
           {game.bggId && (
             <a
               href={`https://boardgamegeek.com/boardgame/${game.bggId}`}
@@ -71,6 +93,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ id:
                 : `${game.minPlayers}–${game.maxPlayers} spelers`}
             </span>
           )}
+          {game.bestPlayers && <span>beste met {game.bestPlayers}</span>}
           {game.playingTime && <span>{game.playingTime} min</span>}
           {game.minAge && <span>{game.minAge}+</span>}
           {game.weight && <span>Complexiteit {game.weight.toFixed(1)}/5</span>}

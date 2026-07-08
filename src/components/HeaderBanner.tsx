@@ -9,12 +9,12 @@ export default function HeaderBanner() {
         fill
         priority
         sizes="100vw"
-        className="object-cover"
+        className="object-cover object-top"
       />
       <div className="absolute inset-0 flex items-center justify-center p-2">
         <Image
           src="/header-logo.png"
-          alt="For the Love of Boardgames"
+          alt="My Game Circle"
           fill
           priority
           sizes="100vw"

@@ -12,7 +12,7 @@ export default function GameGrid({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+    <div className="columns-2 gap-4 sm:columns-3 md:columns-4 lg:columns-6">
       {games.map((game) => (
         <GameCard key={game.id} game={game} />
       ))}

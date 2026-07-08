@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
 import { requireUserId } from "@/lib/current-user";
-import { createManualGame } from "@/lib/games";
+import { updateGame } from "@/lib/games";
 
-const manualGameSchema = z.object({
-  name: z.string().min(1).max(200),
+const editGameSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
   image: z.string().url().optional().or(z.literal("")),
   description: z.string().max(5000).optional(),
   yearPublished: z.number().int().min(1000).max(3000).optional(),
@@ -18,29 +17,20 @@ const manualGameSchema = z.object({
   howToPlayUrl: z.string().url().optional().or(z.literal("")),
 });
 
-export async function POST(req: Request) {
-  const userId = await requireUserId();
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  await requireUserId();
+  const { id } = await params;
+
   const body = await req.json();
-  const parsed = manualGameSchema.safeParse(body);
+  const parsed = editGameSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
 
-  const {
-    name,
-    image,
-    description,
-    yearPublished,
-    minPlayers,
-    maxPlayers,
-    bestPlayers,
-    playingTime,
-    weight,
-    gameType,
-    howToPlayUrl,
-  } = parsed.data;
+  const { name, image, description, yearPublished, minPlayers, maxPlayers, bestPlayers, playingTime, weight, gameType, howToPlayUrl } =
+    parsed.data;
 
-  const game = await createManualGame({
+  const game = await updateGame(id, {
     name,
     image: image || undefined,
     description: description || undefined,
@@ -54,10 +44,5 @@ export async function POST(req: Request) {
     howToPlayUrl: howToPlayUrl || undefined,
   });
 
-  const entry = await prisma.collectionEntry.create({
-    data: { userId, gameId: game.id },
-    include: { game: true },
-  });
-
-  return NextResponse.json(entry);
+  return NextResponse.json(game);
 }

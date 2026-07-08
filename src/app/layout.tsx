@@ -4,7 +4,7 @@ import HeaderBanner from "@/components/HeaderBanner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "For the Love of Boardgames",
+  title: "My Game Circle",
   description: "Bordspellencollectie voor jou en je speelgroep",
 };
 

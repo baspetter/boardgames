@@ -1,4 +1,4 @@
-# For the Love of Boardgames
+# My Game Circle
 
 Zelf-gehoste bordspellencollectie voor jou en je speelgroep. Zoek spellen op via
 BoardGameGeek (BGG), houd je eigen collectie bij, deel 'm met een of meerdere

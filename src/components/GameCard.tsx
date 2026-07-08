@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export interface GameCardData {
@@ -17,19 +16,17 @@ export default function GameCard({ game }: { game: GameCardData }) {
   return (
     <Link
       href={`/games/${game.id}`}
-      className="group relative block overflow-hidden rounded-md bg-surface transition-transform duration-200 hover:z-10 hover:scale-105 hover:shadow-2xl hover:shadow-black/60"
+      className="group relative mb-4 block break-inside-avoid overflow-hidden rounded-md bg-surface transition-transform duration-200 hover:z-10 hover:scale-105 hover:shadow-2xl hover:shadow-black/60"
     >
-      <div className="relative aspect-[3/4] w-full bg-surfaceHover">
+      <div className="relative w-full bg-surfaceHover">
         {cover ? (
-          <Image
-            src={cover}
-            alt={game.name}
-            fill
-            sizes="(max-width: 768px) 45vw, 200px"
-            className="object-cover"
-          />
+          // Cover art comes in whatever aspect ratio it was uploaded/sourced
+          // in (square, landscape, portrait) — a plain <img> keeps that
+          // instead of forcing a crop, which is what the masonry grid needs.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={cover} alt={game.name} className="block w-full h-auto" loading="lazy" />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-white/40">
+          <div className="flex aspect-[3/4] items-center justify-center text-sm text-white/40">
             Geen afbeelding
           </div>
         )}
