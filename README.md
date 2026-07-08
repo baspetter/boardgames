@@ -55,11 +55,12 @@ cp .env.example .env
 **Optie B — SSH:**
 ```bash
 cd /volume1/docker/boardgames
-docker compose up -d --build
+docker compose up -d
 ```
 
 Bij de eerste start:
-- draait de app automatisch de database-migraties (`prisma migrate deploy`);
+- installeert de app-container `npm install` en draait de database-migraties
+  (`prisma migrate deploy`) automatisch — dit duurt de eerste keer een paar minuten;
 - wordt er een eerste uitnodigingscode aangemaakt als die nog niet bestaat — check de logs:
 
 ```bash
@@ -67,6 +68,22 @@ docker compose logs app | grep "invite code"
 ```
 
 Deel die code met je vrienden zodat zij een account kunnen aanmaken op `http://<nas-ip>:3000/register`.
+
+### Code bijwerken (geen rebuild nodig)
+
+De app draait rechtstreeks tegen de bestanden op je NAS (geen "bevroren" image) en gebruikt
+Next.js' ontwikkelmodus met **automatisch hot-reloaden**. Voor een gewone codewijziging:
+
+1. Vervang het bestand (bijv. via File Station) in de projectmap op je NAS.
+2. Wacht een paar seconden en ververs de pagina in je browser — klaar, geen rebuild nodig.
+
+Alleen bij deze twee situaties moet je de app-container **herstarten** (niet herbouwen —
+`docker compose restart app` volstaat, dat draait `dev-entrypoint.sh` opnieuw):
+- je verandert `package.json` (nieuwe/andere dependency);
+- je voegt een nieuwe Prisma-migratie toe (schema-wijziging in de database).
+
+Voor puur een frontend/logica-wijziging in bestaande bestanden hoef je dus niets te
+herstarten — dat is precies waar `docker compose build`/`down`/`up` voorheen voor nodig was.
 
 ### 4. Toegang van buiten je thuisnetwerk
 

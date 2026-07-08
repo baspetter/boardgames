@@ -1,3 +1,7 @@
+# Production multi-stage build. Not currently used by docker-compose.yml
+# (that runs dev-entrypoint.sh directly against the plain node:22-alpine
+# image + a bind mount, for fast iteration on the NAS). Kept for when the
+# app is stable and gets a hardened/optimized deployment later.
 FROM node:22-alpine AS base
 
 FROM base AS deps

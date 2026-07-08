@@ -14,9 +14,15 @@ services:
       timeout: 5s
       retries: 10
 
+  # Dev-mode: runs the app straight from the bind-mounted source on the NAS
+  # (no image build step). Upload a changed file and Next.js hot-reloads it
+  # automatically — only package.json/schema changes need a container
+  # restart ("docker compose restart app"), never a rebuild.
   app:
-    build: .
+    image: node:22-alpine
+    working_dir: /app
     restart: unless-stopped
+    command: sh dev-entrypoint.sh
     depends_on:
       db:
         condition: service_healthy
@@ -26,6 +32,9 @@ services:
       AUTH_URL: ${AUTH_URL:-http://localhost:3000}
       SEED_INVITE_CODE: ${SEED_INVITE_CODE:-}
       BGG_API_TOKEN: ${BGG_API_TOKEN:-}
+      NODE_ENV: development
+    volumes:
+      - .:/app
     ports:
       - "${APP_PORT:-3000}:3000"
 
