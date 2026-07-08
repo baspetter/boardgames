@@ -4,6 +4,10 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Without this, Auth.js only trusts the host from AUTH_URL and will
+  // force redirects back to that single origin — breaking access via any
+  // other address (LAN IP, Tailscale IP, a domain) pointing at the same app.
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
