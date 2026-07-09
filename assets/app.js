@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
       panelsRoot.querySelectorAll('.tab-panel').forEach((p) => p.classList.add('hidden'));
       const panel = document.getElementById('tab-' + tab.dataset.tab);
       if (panel) panel.classList.remove('hidden');
+
+      // Clear any leftover error/result state from the other tab so it
+      // doesn't stay visible after switching.
+      panelsRoot.querySelectorAll('.tab-panel .error').forEach((el) => {
+        el.textContent = '';
+        el.classList.add('hidden');
+      });
+      const searchResults = panelsRoot.querySelector('#bgg-search-results');
+      if (searchResults) searchResults.innerHTML = '';
     });
   });
 
