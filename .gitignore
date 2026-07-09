@@ -1,12 +1,5 @@
-node_modules
-.next
-out
-build
-dist
 .env
-.env.local
+uploads/covers/*
+!uploads/covers/.gitkeep
 *.log
-npm-debug.log*
 .DS_Store
-tsconfig.tsbuildinfo
-docker-data/

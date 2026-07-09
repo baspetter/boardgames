@@ -1,8 +1,0 @@
--- AlterTable
-ALTER TABLE "Game" ADD COLUMN     "howToPlayUrl" TEXT,
-ADD COLUMN     "isManual" BOOLEAN NOT NULL DEFAULT false,
-ALTER COLUMN "bggId" DROP NOT NULL,
-ALTER COLUMN "categories" SET DEFAULT ARRAY[]::TEXT[],
-ALTER COLUMN "mechanics" SET DEFAULT ARRAY[]::TEXT[],
-ALTER COLUMN "designers" SET DEFAULT '[]',
-ALTER COLUMN "artists" SET DEFAULT '[]';
