@@ -36,15 +36,17 @@
           <input type="number" name="maxPlayers" placeholder="Max. spelers" min="1">
           <input type="number" name="bestPlayers" placeholder="Beste aantal" min="1">
         </div>
-        <div class="field-row field-row-3">
+        <div class="field-row">
           <input type="number" name="playingTime" placeholder="Speeltijd (min)" min="1">
-          <input type="number" name="weight" placeholder="Complexiteit (1-5)" min="1" max="5" step="0.1">
-          <select name="gameType">
-            <option value="">Type spel...</option>
+          <input type="number" name="weight" placeholder="Complexiteit (1-5)" min="1" max="5" step="0.01">
+        </div>
+        <div>
+          <select name="gameType[]" multiple size="5">
             <?php foreach (GAME_TYPES as $type): ?>
               <option value="<?= h($type) ?>"><?= h($type) ?></option>
             <?php endforeach; ?>
           </select>
+          <p class="hint" style="margin-top:0.25rem;">Type spel — Ctrl/Cmd-klik om meerdere te selecteren.</p>
         </div>
         <input type="url" name="howToPlayUrl" placeholder="How to play video-link (YouTube, etc.)">
         <p id="manual-error" class="error hidden"></p>

@@ -94,12 +94,12 @@ function upsert_bgg_game(?int $gameId, array $details): array
     return find_game($gameId);
 }
 
-/** @param array{name:string,image?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string,howToPlayUrl?:?string} $input */
+/** @param array{name:string,image?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
     $images = !empty($input['image']) ? optimize_and_store_image($input['image'], 0) : ['image' => null, 'thumbnail' => null];
 
-    $categories = !empty($input['gameType']) ? [$input['gameType']] : [];
+    $categories = !empty($input['gameType']) ? array_values((array) $input['gameType']) : [];
 
     $stmt = db()->prepare(
         'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description,
@@ -150,7 +150,7 @@ function update_game(int $gameId, array $input): void
 
     if (!empty($input['gameType'])) {
         $set[] = 'categories = ?';
-        $params[] = json_encode([$input['gameType']]);
+        $params[] = json_encode(array_values((array) $input['gameType']));
     }
 
     if (!empty($input['image'])) {

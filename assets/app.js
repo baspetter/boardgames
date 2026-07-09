@@ -24,6 +24,22 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// Like Object.fromEntries(new FormData(form)), but repeated keys ending in
+// "[]" (e.g. a <select multiple>) collect into an array instead of the
+// last value winning.
+function formPayload(form) {
+  const payload = {};
+  for (const [key, value] of new FormData(form).entries()) {
+    if (key.endsWith('[]')) {
+      const cleanKey = key.slice(0, -2);
+      (payload[cleanKey] ??= []).push(value);
+    } else {
+      payload[key] = value;
+    }
+  }
+  return payload;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Generic modal open/close (data-open-modal="id" / data-close-modal)
   document.querySelectorAll('[data-open-modal]').forEach((btn) => {
@@ -127,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (manualForm) {
     manualForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const payload = Object.fromEntries(new FormData(manualForm).entries());
+      const payload = formPayload(manualForm);
       postJson('/api/add-manual-game.php', payload)
         .then(() => window.location.reload())
         .catch((err) => showError('manual-error', err.message));
@@ -139,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (editForm) {
     editForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const payload = Object.fromEntries(new FormData(editForm).entries());
+      const payload = formPayload(editForm);
       postJson('/api/edit-game.php', payload)
         .then(() => window.location.reload())
         .catch((err) => showError('edit-error', err.message));
