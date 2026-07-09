@@ -194,6 +194,12 @@ input:focus, textarea:focus, select:focus {
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 0.25rem;
 }
+@media (min-width: 768px) {
+  .game-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+}
+@media (min-width: 1280px) {
+  .game-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+}
 
 .game-card {
   display: block;
