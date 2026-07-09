@@ -62,7 +62,7 @@ require __DIR__ . '/includes/header.php';
       <?php if ($game['best_players']): ?><span>beste met <?= (int) $game['best_players'] ?></span><?php endif; ?>
       <?php if ($game['playing_time']): ?><span><?= (int) $game['playing_time'] ?> min</span><?php endif; ?>
       <?php if ($game['min_age']): ?><span><?= (int) $game['min_age'] ?>+</span><?php endif; ?>
-      <?php if ($game['weight']): ?><span>Complexiteit <?= h(number_format((float) $game['weight'], 1)) ?>/5</span><?php endif; ?>
+      <?php if ($game['weight']): ?><span>Complexiteit <?= h(number_format((float) $game['weight'], 2)) ?>/5</span><?php endif; ?>
       <?php if ($game['bgg_rating']): ?><span class="rating">&#9733; <?= h(number_format((float) $game['bgg_rating'], 1)) ?></span><?php endif; ?>
     </div>
 
