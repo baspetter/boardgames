@@ -49,7 +49,7 @@ op gewone, goedkope shared hosting draait (bijv. mijn.host webhosting).
 Via SSH (aanbevolen, dan kun je later gewoon `git pull` doen voor updates):
 
 ```bash
-git clone <repo-url> ~/domains/mygamecircle.com/  # of jouw webroot-pad
+git clone -b claude/app-dev-continue-0m80pd <repo-url> ~/domains/mygamecircle.com/  # of jouw webroot-pad
 cd ~/domains/mygamecircle.com/
 ```
 
@@ -101,7 +101,7 @@ beschrijfbaar is voor de webserver (meestal standaard goed via je hostingpaneel)
 
 ```bash
 cd ~/domains/mygamecircle.com/
-git pull origin main
+git pull origin claude/app-dev-continue-0m80pd
 ```
 
 Geen build-stap, geen herstart nodig — PHP-bestanden worden direct
