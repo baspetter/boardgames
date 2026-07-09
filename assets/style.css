@@ -350,11 +350,17 @@ input:focus, textarea:focus, select:focus {
   justify-content: center;
   padding: 1.5rem;
   padding-top: 6rem;
+  overflow-y: auto;
   z-index: 50;
+}
+@media (max-width: 640px) {
+  .modal-backdrop { padding: 1rem; padding-top: 1.5rem; padding-bottom: 1.5rem; }
 }
 .modal {
   width: 100%;
   max-width: 32rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
