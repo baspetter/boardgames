@@ -117,11 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = document.createElement('a');
         a.className = 'game-card';
         a.href = '/spel.php?id=' + g.id;
+        a.title = g.name + (entry.owners.length ? ' — ' + entry.owners.map((o) => o.username).join(', ') : '');
         const cover = g.thumbnail || g.image;
         a.innerHTML =
           (cover ? '<img src="' + cover + '" alt="' + escapeHtml(g.name) + '" loading="lazy">' : '<div class="no-image">Geen afbeelding</div>') +
-          (g.bgg_rating ? '<span class="rating-badge">' + Number(g.bgg_rating).toFixed(1) + '</span>' : '') +
-          '<div class="meta"><p class="title">' + escapeHtml(g.name) + '</p><div class="sub"><span>' + (g.year_published || '') + '</span><span>' + escapeHtml(entry.owners.map((o) => o.username).join(', ')) + '</span></div></div>';
+          (g.bgg_rating ? '<span class="rating-badge">' + Number(g.bgg_rating).toFixed(1) + '</span>' : '');
         grid.appendChild(a);
       });
       resultsEl.innerHTML = '';

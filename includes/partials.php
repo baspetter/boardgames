@@ -6,8 +6,9 @@ function render_game_card(array $game, array $owners = []): void
 {
     $cover = $game['thumbnail'] ?: $game['image'];
     $rating = $game['bgg_rating'] ?? null;
+    $tooltip = $game['name'] . ($owners ? ' — ' . implode(', ', array_map(fn($o) => $o['username'], $owners)) : '');
     ?>
-    <a class="game-card" href="/spel.php?id=<?= (int) $game['id'] ?>">
+    <a class="game-card" href="/spel.php?id=<?= (int) $game['id'] ?>" title="<?= h($tooltip) ?>">
       <?php if ($cover): ?>
         <img src="<?= h($cover) ?>" alt="<?= h($game['name']) ?>" loading="lazy">
       <?php else: ?>
@@ -16,15 +17,6 @@ function render_game_card(array $game, array $owners = []): void
       <?php if ($rating !== null): ?>
         <span class="rating-badge"><?= h(number_format((float) $rating, 1)) ?></span>
       <?php endif; ?>
-      <div class="meta">
-        <p class="title"><?= h($game['name']) ?></p>
-        <div class="sub">
-          <span><?= h((string) ($game['year_published'] ?? '')) ?></span>
-          <?php if ($owners): ?>
-            <span><?= h(implode(', ', array_map(fn($o) => $o['username'], $owners))) ?></span>
-          <?php endif; ?>
-        </div>
-      </div>
     </a>
     <?php
 }
