@@ -6,9 +6,9 @@ function render_game_card(array $game, array $owners = []): void
 {
     $cover = $game['thumbnail'] ?: $game['image'];
     $rating = $game['bgg_rating'] ?? null;
-    $tooltip = $game['name'] . ($owners ? ' — ' . implode(', ', array_map(fn($o) => $o['username'], $owners)) : '');
+    $ownerNames = $owners ? implode(', ', array_map(fn($o) => $o['username'], $owners)) : '';
     ?>
-    <a class="game-card" href="/spel.php?id=<?= (int) $game['id'] ?>" title="<?= h($tooltip) ?>">
+    <a class="game-card" href="/spel.php?id=<?= (int) $game['id'] ?>">
       <?php if ($cover): ?>
         <img src="<?= h($cover) ?>" alt="<?= h($game['name']) ?>" loading="lazy">
       <?php else: ?>
@@ -17,6 +17,12 @@ function render_game_card(array $game, array $owners = []): void
       <?php if ($rating !== null): ?>
         <span class="rating-badge"><?= h(number_format((float) $rating, 1)) ?></span>
       <?php endif; ?>
+      <div class="card-overlay">
+        <p class="card-title"><?= h($game['name']) ?></p>
+        <?php if ($game['year_published'] || $ownerNames): ?>
+          <p class="card-sub"><?= h(trim(($game['year_published'] ?? '') . ($ownerNames ? ' · ' . $ownerNames : ''))) ?></p>
+        <?php endif; ?>
+      </div>
     </a>
     <?php
 }

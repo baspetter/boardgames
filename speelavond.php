@@ -117,11 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = document.createElement('a');
         a.className = 'game-card';
         a.href = '/spel.php?id=' + g.id;
-        a.title = g.name + (entry.owners.length ? ' — ' + entry.owners.map((o) => o.username).join(', ') : '');
         const cover = g.thumbnail || g.image;
+        const owners = entry.owners.map((o) => o.username).join(', ');
+        const sub = [g.year_published || '', owners].filter(Boolean).join(' · ');
         a.innerHTML =
           (cover ? '<img src="' + cover + '" alt="' + escapeHtml(g.name) + '" loading="lazy">' : '<div class="no-image">Geen afbeelding</div>') +
-          (g.bgg_rating ? '<span class="rating-badge">' + Number(g.bgg_rating).toFixed(1) + '</span>' : '');
+          (g.bgg_rating ? '<span class="rating-badge">' + Number(g.bgg_rating).toFixed(1) + '</span>' : '') +
+          '<div class="card-overlay"><p class="card-title">' + escapeHtml(g.name) + '</p>' +
+          (sub ? '<p class="card-sub">' + escapeHtml(sub) + '</p>' : '') + '</div>';
         grid.appendChild(a);
       });
       resultsEl.innerHTML = '';
