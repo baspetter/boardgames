@@ -10,6 +10,20 @@ function postJson(url, data) {
   });
 }
 
+// Like postJson(), but sends a multipart/form-data body (for forms with a
+// file input) instead of JSON.
+function postForm(url, formData) {
+  return fetch(url, {
+    method: 'POST',
+    headers: { 'X-CSRF-Token': window.CSRF_TOKEN || '' },
+    body: formData,
+  }).then(async (r) => {
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(body.error || 'Er ging iets mis');
+    return body;
+  });
+}
+
 function showError(elId, msg) {
   const el = document.getElementById(elId);
   if (el) {
@@ -22,22 +36,6 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
-}
-
-// Like Object.fromEntries(new FormData(form)), but repeated keys ending in
-// "[]" (e.g. a <select multiple>) collect into an array instead of the
-// last value winning.
-function formPayload(form) {
-  const payload = {};
-  for (const [key, value] of new FormData(form).entries()) {
-    if (key.endsWith('[]')) {
-      const cleanKey = key.slice(0, -2);
-      (payload[cleanKey] ??= []).push(value);
-    } else {
-      payload[key] = value;
-    }
-  }
-  return payload;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -143,8 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (manualForm) {
     manualForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const payload = formPayload(manualForm);
-      postJson('/api/add-manual-game.php', payload)
+      postForm('/api/add-manual-game.php', new FormData(manualForm))
         .then(() => window.location.reload())
         .catch((err) => showError('manual-error', err.message));
     });
@@ -155,8 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (editForm) {
     editForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const payload = formPayload(editForm);
-      postJson('/api/edit-game.php', payload)
+      postForm('/api/edit-game.php', new FormData(editForm))
         .then(() => window.location.reload())
         .catch((err) => showError('edit-error', err.message));
     });

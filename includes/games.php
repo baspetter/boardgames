@@ -94,10 +94,16 @@ function upsert_bgg_game(?int $gameId, array $details): array
     return find_game($gameId);
 }
 
-/** @param array{name:string,image?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
+/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
-    $images = !empty($input['image']) ? optimize_and_store_image($input['image'], 0) : ['image' => null, 'thumbnail' => null];
+    if (!empty($input['imageUploadPath'])) {
+        $images = optimize_and_store_uploaded_image($input['imageUploadPath'], 0);
+    } elseif (!empty($input['image'])) {
+        $images = optimize_and_store_image($input['image'], 0);
+    } else {
+        $images = ['image' => null, 'thumbnail' => null];
+    }
 
     $categories = !empty($input['gameType']) ? array_values((array) $input['gameType']) : [];
 
@@ -153,7 +159,15 @@ function update_game(int $gameId, array $input): void
         $params[] = json_encode(array_values((array) $input['gameType']));
     }
 
-    if (!empty($input['image'])) {
+    if (!empty($input['imageUploadPath'])) {
+        $images = optimize_and_store_uploaded_image($input['imageUploadPath'], $gameId);
+        if ($images['image']) {
+            $set[] = 'image = ?';
+            $params[] = $images['image'];
+            $set[] = 'thumbnail = ?';
+            $params[] = $images['thumbnail'];
+        }
+    } elseif (!empty($input['image'])) {
         $images = optimize_and_store_image($input['image'], $gameId);
         if ($images['image']) {
             $set[] = 'image = ?';

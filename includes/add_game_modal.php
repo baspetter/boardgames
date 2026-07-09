@@ -26,9 +26,14 @@
     </div>
 
     <div id="tab-manual" class="tab-panel hidden">
-      <form id="manual-game-form" class="form-stack">
+      <form id="manual-game-form" class="form-stack" enctype="multipart/form-data">
         <input type="text" name="name" placeholder="Titel *" required>
         <input type="url" name="image" placeholder="Cover art URL">
+        <div class="divider"><hr>of<hr></div>
+        <div>
+          <label class="hint" style="display:block;margin-bottom:0.25rem;">Cover art uploaden</label>
+          <input type="file" name="imageFile" accept="image/*">
+        </div>
         <textarea name="description" placeholder="Beschrijving" rows="3"></textarea>
         <div class="field-row field-row-4">
           <input type="number" name="yearPublished" placeholder="Jaartal" min="1000" max="3000">

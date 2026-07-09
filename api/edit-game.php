@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/games.php';
 require_login_json();
 require_csrf();
 
-$data = json_body();
+$data = $_POST;
 $gameId = (int) ($data['gameId'] ?? 0);
 if (!$gameId || !find_game($gameId)) {
     json_response(['error' => 'Spel niet gevonden'], 404);
@@ -18,6 +18,7 @@ try {
     update_game($gameId, [
         'name' => $data['name'] ?? null,
         'image' => $data['image'] ?? null,
+        'imageUploadPath' => uploaded_image_tmp_path('imageFile'),
         'description' => $data['description'] ?? null,
         'yearPublished' => $toIntOrNull($data['yearPublished'] ?? null),
         'minPlayers' => $toIntOrNull($data['minPlayers'] ?? null),

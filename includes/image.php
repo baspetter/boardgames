@@ -16,7 +16,22 @@ function optimize_and_store_image(string $sourceUrl, int $gameId): array
     if ($raw === null) {
         return ['image' => null, 'thumbnail' => null];
     }
+    return optimize_and_store_image_data($raw, $gameId);
+}
 
+/** Same pipeline as optimize_and_store_image(), but for a file already on disk (an upload). */
+function optimize_and_store_uploaded_image(string $tmpFilePath, int $gameId): array
+{
+    $raw = @file_get_contents($tmpFilePath);
+    if ($raw === false || $raw === '') {
+        return ['image' => null, 'thumbnail' => null];
+    }
+    return optimize_and_store_image_data($raw, $gameId);
+}
+
+/** @return array{image: ?string, thumbnail: ?string} */
+function optimize_and_store_image_data(string $raw, int $gameId): array
+{
     $source = @imagecreatefromstring($raw);
     if ($source === false) {
         return ['image' => null, 'thumbnail' => null];
@@ -26,7 +41,7 @@ function optimize_and_store_image(string $sourceUrl, int $gameId): array
         mkdir(UPLOADS_DIR, 0755, true);
     }
 
-    $unique = $gameId . '-' . substr(md5($sourceUrl . microtime()), 0, 8);
+    $unique = $gameId . '-' . substr(md5($raw . microtime()), 0, 8);
     $imagePath = resize_and_save($source, UPLOADS_DIR . "/$unique-detail.jpg", 800);
     $thumbPath = resize_and_save($source, UPLOADS_DIR . "/$unique-thumb.jpg", 400);
 
@@ -36,6 +51,18 @@ function optimize_and_store_image(string $sourceUrl, int $gameId): array
         'image' => $imagePath ? UPLOADS_URL . '/' . basename($imagePath) : null,
         'thumbnail' => $thumbPath ? UPLOADS_URL . '/' . basename($thumbPath) : null,
     ];
+}
+
+/** Returns the tmp path of a validly-uploaded file in $_FILES[$field], or null if none/invalid. */
+function uploaded_image_tmp_path(string $field): ?string
+{
+    if (empty($_FILES[$field]) || $_FILES[$field]['error'] === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+    if ($_FILES[$field]['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES[$field]['tmp_name'])) {
+        return null;
+    }
+    return $_FILES[$field]['tmp_name'];
 }
 
 /** Downloads a URL into memory, capped in size and time. Returns null on failure. */

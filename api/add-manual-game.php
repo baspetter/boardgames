@@ -5,7 +5,7 @@ require_once __DIR__ . '/../includes/games.php';
 $userId = require_login_json();
 require_csrf();
 
-$data = json_body();
+$data = $_POST;
 $name = trim($data['name'] ?? '');
 if ($name === '') {
     json_response(['error' => 'Titel is verplicht'], 400);
@@ -18,6 +18,7 @@ try {
     $gameId = create_manual_game([
         'name' => $name,
         'image' => $data['image'] ?? null,
+        'imageUploadPath' => uploaded_image_tmp_path('imageFile'),
         'description' => $data['description'] ?? null,
         'yearPublished' => $toIntOrNull($data['yearPublished'] ?? null),
         'minPlayers' => $toIntOrNull($data['minPlayers'] ?? null),

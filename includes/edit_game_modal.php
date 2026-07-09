@@ -8,10 +8,15 @@ require_once __DIR__ . '/game-types.php';
       <h2 style="margin:0;">Spel bewerken</h2>
       <button type="button" class="modal-close" data-close-modal>&times;</button>
     </div>
-    <form id="edit-game-form" class="form-stack">
+    <form id="edit-game-form" class="form-stack" enctype="multipart/form-data">
       <input type="hidden" name="gameId" value="<?= (int) $game['id'] ?>">
       <input type="text" name="name" placeholder="Titel *" value="<?= h($game['name']) ?>" required>
       <input type="url" name="image" placeholder="Cover art URL (laat leeg om te behouden)">
+      <div class="divider"><hr>of<hr></div>
+      <div>
+        <label class="hint" style="display:block;margin-bottom:0.25rem;">Nieuwe cover art uploaden</label>
+        <input type="file" name="imageFile" accept="image/*">
+      </div>
       <textarea name="description" placeholder="Beschrijving" rows="3"><?= h($game['description'] ?? '') ?></textarea>
       <div class="field-row field-row-4">
         <input type="number" name="yearPublished" placeholder="Jaartal" min="1000" max="3000" value="<?= h((string) ($game['year_published'] ?? '')) ?>">
