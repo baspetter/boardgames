@@ -75,8 +75,7 @@ a {
 
 /* Topbar (above the header banner): search + messages + user menu */
 .topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--background);
 }
 .topbar-inner {
   max-width: var(--site-max-width);
@@ -177,9 +176,10 @@ a {
   z-index: 30;
   display: flex;
   gap: 0.75rem;
+  width: 100%;
   max-width: var(--site-max-width);
   margin: 0 auto;
-  padding: 1rem 0.75rem;
+  padding: 1rem 0;
   background: var(--background);
 }
 .main-nav-btn {
