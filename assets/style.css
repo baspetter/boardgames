@@ -73,7 +73,11 @@ a {
   padding: 0.5rem;
 }
 
-/* Topbar (above the header banner): messages + user menu */
+/* Topbar (above the header banner): search + messages + user menu */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
 .topbar-inner {
   max-width: var(--site-max-width);
   margin: 0 auto;
@@ -97,32 +101,49 @@ a {
   justify-content: center;
 }
 .icon-btn:hover {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.2);
   color: var(--text);
 }
 .icon-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
-.avatar-btn {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 50%;
+.user-menu {
+  position: relative;
+}
+.user-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   border: none;
+  background: var(--surface-hover);
+  color: var(--text-dim);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem 0.25rem 0.25rem;
+  cursor: pointer;
+}
+.user-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text);
+}
+.avatar-circle {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
   background: var(--accent);
   color: white;
   font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
-.avatar-btn:hover {
-  background: var(--accent-hover);
+.user-menu-btn .chevron {
+  transition: transform 0.15s;
 }
-.user-menu {
-  position: relative;
+.user-menu-btn[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
 }
 .user-menu-dropdown {
   position: absolute;
@@ -164,22 +185,25 @@ a {
 .main-nav-btn {
   flex: 1;
   text-align: center;
-  padding: 0.9rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  padding: 1.1rem 1rem;
+  background-color: var(--surface-hover);
+  background-size: cover;
+  background-position: center;
+  border: none;
   border-radius: 0.5rem;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
-  color: var(--text-dim);
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 .main-nav-btn:hover {
-  background: var(--surface-hover);
-  color: var(--text);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .main-nav-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+  background-color: var(--accent);
+}
+.main-nav-btn.active:hover {
+  background-color: var(--accent-hover);
 }
 
 /* Buttons & inputs */

@@ -17,9 +17,17 @@ $activeNav = $activeNav ?? null;
 <?php if ($loggedIn): ?>
   <div class="topbar">
     <div class="topbar-inner">
-      <button type="button" class="icon-btn" title="Messages (coming soon)" aria-label="Messages" disabled>&#9993;</button>
+      <button type="button" class="icon-btn" title="Search games" aria-label="Search games" data-open-modal="add-game-modal">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <button type="button" class="icon-btn" title="Messages (coming soon)" aria-label="Messages" disabled>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 6 10 7L22 6"></path></svg>
+      </button>
       <div class="user-menu">
-        <button type="button" class="avatar-btn" id="user-menu-btn" aria-haspopup="true" aria-expanded="false" title="<?= h(current_username()) ?>"><?= h(mb_strtoupper(mb_substr(current_username(), 0, 1))) ?></button>
+        <button type="button" class="user-menu-btn" id="user-menu-btn" aria-haspopup="true" aria-expanded="false" title="<?= h(current_username()) ?>">
+          <span class="avatar-circle"><?= h(mb_strtoupper(mb_substr(current_username(), 0, 1))) ?></span>
+          <svg class="chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
         <div class="user-menu-dropdown hidden" id="user-menu-dropdown">
           <a href="/profile.php">Edit profile</a>
           <a href="/logout.php">Log out</a>

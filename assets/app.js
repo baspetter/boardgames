@@ -58,11 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (userMenuBtn && userMenuDropdown) {
     userMenuBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      userMenuDropdown.classList.toggle('hidden');
+      const isOpen = userMenuDropdown.classList.toggle('hidden') === false;
+      userMenuBtn.setAttribute('aria-expanded', String(isOpen));
     });
     document.addEventListener('click', (e) => {
       if (!userMenuDropdown.classList.contains('hidden') && !userMenuDropdown.contains(e.target)) {
         userMenuDropdown.classList.add('hidden');
+        userMenuBtn.setAttribute('aria-expanded', 'false');
       }
     });
   }
