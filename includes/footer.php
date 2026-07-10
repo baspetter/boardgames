@@ -3,19 +3,19 @@
   <div class="site-footer-inner">
     <div class="site-footer-brand">
       <span class="site-footer-title">My Game Circle</span>
-      <span class="site-footer-tagline">Zelf-gehoste bordspellencollectie voor jou en je speelgroep</span>
+      <span class="site-footer-tagline">Self-hosted board game collection for you and your playgroup</span>
     </div>
     <?php if ($loggedIn): ?>
       <nav class="site-footer-links">
-        <a href="/">Collectie</a>
+        <a href="/">Collection</a>
         <a href="/playgroups.php">Playgroups</a>
-        <a href="/speelavond.php">Speelavond</a>
+        <a href="/gamenights.php">Gamenights</a>
       </nav>
     <?php endif; ?>
   </div>
   <div class="site-footer-inner site-footer-bottom">
     <p>&copy; <?= date('Y') ?> My Game Circle</p>
-    <p>Spelinformatie en afbeeldingen via <a href="https://boardgamegeek.com" target="_blank" rel="noopener">BoardGameGeek</a></p>
+    <p>Game info and images via <a href="https://boardgamegeek.com" target="_blank" rel="noopener">BoardGameGeek</a></p>
   </div>
 </footer>
 <script>window.CSRF_TOKEN = <?= json_encode(csrf_token()) ?>;</script>

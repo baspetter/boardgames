@@ -8,11 +8,11 @@ function render_game_card(array $game, array $owners = []): void
     $rating = $game['bgg_rating'] ?? null;
     $ownerNames = $owners ? implode(', ', array_map(fn($o) => $o['username'], $owners)) : '';
     ?>
-    <a class="game-card" href="/spel.php?id=<?= (int) $game['id'] ?>">
+    <a class="game-card" href="/game.php?id=<?= (int) $game['id'] ?>">
       <?php if ($cover): ?>
         <img src="<?= h($cover) ?>" alt="<?= h($game['name']) ?>" loading="lazy">
       <?php else: ?>
-        <div class="no-image">Geen afbeelding</div>
+        <div class="no-image">No image</div>
       <?php endif; ?>
       <?php if ($rating !== null): ?>
         <span class="rating-badge"><?= h(number_format((float) $rating, 1)) ?></span>
@@ -32,7 +32,7 @@ function render_game_card(array $game, array $owners = []): void
  *        game rows, or {game, owners} pairs (as returned by
  *        get_playgroup_collection()).
  */
-function render_game_grid(array $entries, string $emptyMessage = 'Nog geen spellen toegevoegd.'): void
+function render_game_grid(array $entries, string $emptyMessage = 'No games added yet.'): void
 {
     if (empty($entries)) {
         echo '<p class="empty-state">' . h($emptyMessage) . '</p>';

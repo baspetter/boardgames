@@ -91,15 +91,15 @@ function validate_invite_code(string $code, ?string &$error): ?int
     $invite = $stmt->fetch();
 
     if (!$invite) {
-        $error = 'Ongeldige uitnodigingscode';
+        $error = 'Invalid invite code';
         return null;
     }
     if ($invite['expires_at'] !== null && strtotime($invite['expires_at']) < time()) {
-        $error = 'Uitnodigingscode is verlopen';
+        $error = 'Invite code has expired';
         return null;
     }
     if ((int) $invite['uses_count'] >= (int) $invite['max_uses']) {
-        $error = 'Uitnodigingscode is al gebruikt';
+        $error = 'Invite code has already been used';
         return null;
     }
 

@@ -5,7 +5,7 @@ function postJson(url, data) {
     body: JSON.stringify(data),
   }).then(async (r) => {
     const body = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(body.error || 'Er ging iets mis');
+    if (!r.ok) throw new Error(body.error || 'Something went wrong');
     return body;
   });
 }
@@ -19,7 +19,7 @@ function postForm(url, formData) {
     body: formData,
   }).then(async (r) => {
     const body = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(body.error || 'Er ging iets mis');
+    if (!r.ok) throw new Error(body.error || 'Something went wrong');
     return body;
   });
 }
@@ -51,6 +51,21 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.closest('.modal-backdrop').classList.add('hidden');
     });
   });
+
+  // User menu dropdown (top-right)
+  const userMenuBtn = document.getElementById('user-menu-btn');
+  const userMenuDropdown = document.getElementById('user-menu-dropdown');
+  if (userMenuBtn && userMenuDropdown) {
+    userMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userMenuDropdown.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!userMenuDropdown.classList.contains('hidden') && !userMenuDropdown.contains(e.target)) {
+        userMenuDropdown.classList.add('hidden');
+      }
+    });
+  }
 
   // Tabs within the add-game modal
   document.querySelectorAll('.tab').forEach((tab) => {
@@ -87,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       debounceTimer = setTimeout(() => {
-        resultsDiv.innerHTML = '<p class="hint">Zoeken...</p>';
+        resultsDiv.innerHTML = '<p class="hint">Searching...</p>';
         fetch('/api/search-bgg.php?q=' + encodeURIComponent(q))
           .then((r) => r.json())
           .then((data) => {
@@ -96,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
               return;
             }
             if (!data.length) {
-              resultsDiv.innerHTML = '<p class="hint">Geen resultaten gevonden.</p>';
+              resultsDiv.innerHTML = '<p class="hint">No results found.</p>';
               return;
             }
             resultsDiv.innerHTML = '';
@@ -107,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
               btn.innerHTML =
                 '<span>' + escapeHtml(item.name) +
                 (item.yearPublished ? ' <span class="hint">(' + item.yearPublished + ')</span>' : '') +
-                '</span><span style="color:var(--accent);font-size:0.75rem;">+ Toevoegen</span>';
+                '</span><span style="color:var(--accent);font-size:0.75rem;">+ Add</span>';
               btn.addEventListener('click', () => {
                 btn.disabled = true;
                 postJson('/api/add-game.php', { bggId: item.bggId })
@@ -164,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const action = btn.dataset.action;
       const gameId = btn.dataset.gameId;
-      if (action === 'remove-game' && !confirm('Verwijderen uit je collectie?')) {
+      if (action === 'remove-game' && !confirm('Remove from your collection?')) {
         return;
       }
       const urls = {

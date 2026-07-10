@@ -10,7 +10,7 @@ $playGroupId = (int) ($data['playGroupId'] ?? 0);
 $presentUserIds = array_map('intval', $data['presentUserIds'] ?? []);
 
 if (!get_membership($userId, $playGroupId)) {
-    json_response(['error' => 'Geen toegang tot deze groep'], 403);
+    json_response(['error' => 'No access to this group'], 403);
 }
 
 $members = get_playgroup_members($playGroupId);

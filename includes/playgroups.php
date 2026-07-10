@@ -77,11 +77,11 @@ function join_playgroup(string $inviteCode, int $userId): int
     $stmt->execute([strtoupper($inviteCode)]);
     $group = $stmt->fetch();
     if (!$group) {
-        throw new Exception('Ongeldige groepscode');
+        throw new Exception('Invalid group code');
     }
 
     if (get_membership($userId, (int) $group['id'])) {
-        throw new Exception('Je bent al lid van deze groep');
+        throw new Exception('You are already a member of this group');
     }
 
     db()->prepare('INSERT INTO play_group_members (user_id, play_group_id, role) VALUES (?, ?, "MEMBER")')

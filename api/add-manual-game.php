@@ -8,7 +8,7 @@ require_csrf();
 $data = $_POST;
 $name = trim($data['name'] ?? '');
 if ($name === '') {
-    json_response(['error' => 'Titel is verplicht'], 400);
+    json_response(['error' => 'Title is required'], 400);
 }
 
 $toIntOrNull = fn($v) => ($v !== null && $v !== '') ? (int) $v : null;

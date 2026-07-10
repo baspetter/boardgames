@@ -17,24 +17,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $callback = $_POST['callback'] ?? '/';
         redirect(str_starts_with($callback, '/') ? $callback : '/');
     } else {
-        $error = 'Onjuiste inloggegevens.';
+        $error = 'Incorrect login credentials.';
     }
 }
 
 $callback = $_GET['callback'] ?? '/';
-$pageTitle = 'Inloggen - ' . SITE_NAME;
+$pageTitle = 'Log in - ' . SITE_NAME;
 require __DIR__ . '/includes/header.php';
 ?>
 <div class="form-card">
-  <h1>Inloggen</h1>
+  <h1>Log in</h1>
   <form method="post" class="form-stack">
     <input type="hidden" name="callback" value="<?= h($callback) ?>">
-    <input type="email" name="email" placeholder="E-mailadres" required autofocus>
-    <input type="password" name="password" placeholder="Wachtwoord" required>
+    <input type="email" name="email" placeholder="Email address" required autofocus>
+    <input type="password" name="password" placeholder="Password" required>
     <?php if ($error): ?><p class="error"><?= h($error) ?></p><?php endif; ?>
-    <?php if (isset($_GET['registered'])): ?><p class="hint">Account aangemaakt, je kan nu inloggen.</p><?php endif; ?>
-    <button type="submit" class="btn btn-accent btn-block">Inloggen</button>
+    <?php if (isset($_GET['registered'])): ?><p class="hint">Account created, you can now log in.</p><?php endif; ?>
+    <button type="submit" class="btn btn-accent btn-block">Log in</button>
   </form>
-  <p class="hint" style="margin-top:1rem;">Nog geen account? <a href="/register.php" style="color:var(--accent)">Registreer met uitnodigingscode</a></p>
+  <p class="hint" style="margin-top:1rem;">Don't have an account? <a href="/register.php" style="color:var(--accent)">Register with an invite code</a></p>
 </div>
 <?php require __DIR__ . '/includes/footer.php'; ?>

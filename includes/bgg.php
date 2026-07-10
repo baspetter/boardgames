@@ -39,11 +39,11 @@ function bgg_fetch(string $url, int $attempts = 5, int $delaySeconds = 2): strin
 {
     if (BGG_API_TOKEN === '') {
         throw new BggException(
-            'BGG_API_TOKEN is niet ingesteld. BoardGameGeek vereist een geregistreerde, ' .
-            'goedgekeurde applicatie met een Authorization: Bearer token ' .
-            '(zie https://boardgamegeek.com/using_the_xml_api) — registreer op ' .
-            'https://boardgamegeek.com/applications, maak een token aan, en zet ' .
-            'BGG_API_TOKEN in je .env.'
+            'BGG_API_TOKEN is not set. BoardGameGeek requires a registered, approved ' .
+            'application with an Authorization: Bearer token ' .
+            '(see https://boardgamegeek.com/using_the_xml_api) — register at ' .
+            'https://boardgamegeek.com/applications, create a token, and set ' .
+            'BGG_API_TOKEN in your .env.'
         );
     }
 
@@ -156,7 +156,7 @@ function bgg_get_thing(int $bggId): array
     $url = BGG_BASE . '/thing?id=' . $bggId . '&stats=1';
     $xml = simplexml_load_string(bgg_fetch($url));
     if ($xml === false || !isset($xml->item)) {
-        throw new BggException("Spel niet gevonden op BGG: $bggId");
+        throw new BggException("Game not found on BGG: $bggId");
     }
     $item = $xml->item;
 

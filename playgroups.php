@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'create') {
         $name = trim($_POST['name'] ?? '');
         if (mb_strlen($name) < 2) {
-            $createError = 'Naam moet minimaal 2 tekens zijn';
+            $createError = 'Name must be at least 2 characters';
         } else {
             create_playgroup($name, $userId);
             redirect('/playgroups.php');
@@ -28,25 +28,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $groups = get_user_playgroups($userId);
 $pageTitle = 'Playgroups - ' . SITE_NAME;
+$activeNav = 'playgroups';
 require __DIR__ . '/includes/header.php';
 ?>
 <h1>Playgroups</h1>
 
 <div class="form-card" style="margin-left:0;">
-  <h2 style="margin-top:0;">Nieuwe groep aanmaken</h2>
+  <h2 style="margin-top:0;">Create new group</h2>
   <form method="post" class="form-stack" style="flex-direction:row;">
     <input type="hidden" name="action" value="create">
-    <input type="text" name="name" placeholder="Naam nieuwe playgroup" minlength="2" required>
-    <button type="submit" class="btn btn-accent">Aanmaken</button>
+    <input type="text" name="name" placeholder="New playgroup name" minlength="2" required>
+    <button type="submit" class="btn btn-accent">Create</button>
   </form>
   <?php if ($createError): ?><p class="error"><?= h($createError) ?></p><?php endif; ?>
 
   <hr style="border-color:var(--border);margin:1rem 0;">
 
-  <h2>Lid worden van een groep</h2>
+  <h2>Join a group</h2>
   <form method="post" class="form-stack" style="flex-direction:row;">
     <input type="hidden" name="action" value="join">
-    <input type="text" name="invite_code" placeholder="Uitnodigingscode van een groep" required>
+    <input type="text" name="invite_code" placeholder="Group invite code" required>
     <button type="submit" class="btn btn-secondary">Join</button>
   </form>
   <?php if ($joinError): ?><p class="error"><?= h($joinError) ?></p><?php endif; ?>
@@ -57,13 +58,13 @@ require __DIR__ . '/includes/header.php';
     <a href="/playgroup.php?id=<?= (int) $group['id'] ?>" class="pill" style="display:flex;justify-content:space-between;padding:1rem;background:var(--surface);">
       <span>
         <strong><?= h($group['name']) ?></strong><br>
-        <span class="hint"><?= (int) $group['member_count'] ?> leden</span>
+        <span class="hint"><?= (int) $group['member_count'] ?> members</span>
       </span>
       <span class="hint">&rarr;</span>
     </a>
   <?php endforeach; ?>
   <?php if (!$groups): ?>
-    <p class="hint">Je bent nog geen lid van een playgroup.</p>
+    <p class="hint">You're not a member of a playgroup yet.</p>
   <?php endif; ?>
 </div>
 

@@ -41,7 +41,7 @@ function refresh_game_from_bgg(int $gameId): array
 {
     $game = find_game($gameId);
     if (!$game || $game['bgg_id'] === null) {
-        throw new Exception('Dit spel heeft geen BGG-koppeling om te verversen.');
+        throw new Exception('This game has no BGG link to refresh from.');
     }
     $details = bgg_get_thing((int) $game['bgg_id']);
     return upsert_bgg_game($gameId, $details);

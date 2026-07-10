@@ -34,7 +34,7 @@ function require_login_json(): int
 {
     $userId = current_user_id();
     if ($userId === null) {
-        json_response(['error' => 'Niet ingelogd'], 401);
+        json_response(['error' => 'Not logged in'], 401);
     }
     return $userId;
 }
@@ -44,7 +44,7 @@ function require_csrf(): void
     start_session();
     $submitted = $_POST['csrf_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
     if (!hash_equals($_SESSION['csrf_token'] ?? '', $submitted)) {
-        json_response(['error' => 'Ongeldig verzoek (CSRF-token mismatch), herlaad de pagina.'], 403);
+        json_response(['error' => 'Invalid request (CSRF token mismatch), please reload the page.'], 403);
     }
 }
 

@@ -16,13 +16,14 @@ foreach ($groups as $g) {
     ];
 }
 
-$pageTitle = 'Speelavond - ' . SITE_NAME;
+$pageTitle = 'Gamenights - ' . SITE_NAME;
+$activeNav = 'gamenights';
 require __DIR__ . '/includes/header.php';
 ?>
-<h1>Speelavond</h1>
+<h1>Gamenights</h1>
 
 <?php if (!$groupsData): ?>
-  <p class="hint">Je bent nog geen lid van een playgroup.</p>
+  <p class="hint">You're not a member of a playgroup yet.</p>
 <?php else: ?>
   <div id="gn-group-tabs" class="tabs" style="flex-wrap:wrap;"></div>
   <div id="gn-members-card" class="form-card" style="margin-left:0;max-width:none;"></div>
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const label = document.createElement('p');
     label.className = 'hint';
     label.style.marginTop = '0';
-    label.textContent = 'Wie is er vanavond bij?';
+    label.textContent = "Who's here tonight?";
     membersEl.appendChild(label);
 
     const pills = document.createElement('div');
@@ -94,20 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
     findBtn.type = 'button';
     findBtn.className = 'btn btn-accent';
     findBtn.style.marginTop = '1rem';
-    findBtn.textContent = 'Zoek spellen voor ' + present.size + ' spelers';
+    findBtn.textContent = 'Find games for ' + present.size + ' players';
     findBtn.disabled = present.size === 0;
     findBtn.addEventListener('click', findGames);
     membersEl.appendChild(findBtn);
   }
 
   function findGames() {
-    resultsEl.innerHTML = '<p class="hint">Zoeken...</p>';
+    resultsEl.innerHTML = '<p class="hint">Searching...</p>';
     postJson('/api/game-night.php', {
       playGroupId: currentGroupId,
       presentUserIds: Array.from(present),
     }).then((data) => {
       if (!data.suggestions.length) {
-        resultsEl.innerHTML = '<p class="empty-state">Geen geschikte spellen gevonden voor dit aantal spelers.</p>';
+        resultsEl.innerHTML = '<p class="empty-state">No suitable games found for this many players.</p>';
         return;
       }
       const grid = document.createElement('div');
@@ -116,12 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const g = entry.game;
         const a = document.createElement('a');
         a.className = 'game-card';
-        a.href = '/spel.php?id=' + g.id;
+        a.href = '/game.php?id=' + g.id;
         const cover = g.thumbnail || g.image;
         const owners = entry.owners.map((o) => o.username).join(', ');
         const sub = [g.year_published || '', owners].filter(Boolean).join(' · ');
         a.innerHTML =
-          (cover ? '<img src="' + cover + '" alt="' + escapeHtml(g.name) + '" loading="lazy">' : '<div class="no-image">Geen afbeelding</div>') +
+          (cover ? '<img src="' + cover + '" alt="' + escapeHtml(g.name) + '" loading="lazy">' : '<div class="no-image">No image</div>') +
           (g.bgg_rating ? '<span class="rating-badge">' + Number(g.bgg_rating).toFixed(1) + '</span>' : '') +
           '<div class="card-overlay"><p class="card-title">' + escapeHtml(g.name) + '</p>' +
           (sub ? '<p class="card-sub">' + escapeHtml(sub) + '</p>' : '') + '</div>';

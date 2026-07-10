@@ -8,7 +8,7 @@ require_csrf();
 $data = $_POST;
 $gameId = (int) ($data['gameId'] ?? 0);
 if (!$gameId || !find_game($gameId)) {
-    json_response(['error' => 'Spel niet gevonden'], 404);
+    json_response(['error' => 'Game not found'], 404);
 }
 
 $toIntOrNull = fn($v) => ($v !== null && $v !== '') ? (int) $v : null;
