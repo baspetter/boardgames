@@ -306,6 +306,7 @@ input:focus, textarea:focus, select:focus {
   .game-detail { grid-template-columns: 320px 1fr; }
 }
 .game-detail-cover {
+  position: relative;
   width: 100%;
   border-radius: 0.5rem;
   overflow: hidden;
@@ -315,6 +316,43 @@ input:focus, textarea:focus, select:focus {
   display: block;
   width: 100%;
   height: auto;
+}
+.edit-icon-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-icon-btn:hover {
+  background: var(--accent);
+}
+.video-embed {
+  position: relative;
+  width: 100%;
+  max-width: 48rem;
+  aspect-ratio: 16 / 9;
+  margin-top: 1.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--surface);
+}
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 .game-detail-actions {
   margin-top: 1rem;

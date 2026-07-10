@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/game-types.php';
 /** @var array $game */
+/** @var array|false|null $myEntry */
 ?>
 <div id="edit-game-modal" class="modal-backdrop hidden">
   <div class="modal">
@@ -41,5 +42,11 @@ require_once __DIR__ . '/game-types.php';
       <button type="submit" class="btn btn-accent">Opslaan</button>
     </form>
     <p class="hint" style="margin-top:0.5rem;">Laat "Cover art URL" leeg om de huidige afbeelding te behouden.</p>
+
+    <?php if ($myEntry): ?>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <button type="button" class="btn btn-secondary" data-action="remove-game" data-game-id="<?= (int) $game['id'] ?>">Verwijder uit mijn collectie</button>
+      </div>
+    <?php endif; ?>
   </div>
 </div>

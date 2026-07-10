@@ -79,6 +79,26 @@ function youtube_search_url(string $gameName): string
     return 'https://www.youtube.com/results?search_query=' . urlencode($gameName . ' how to play');
 }
 
+/** Converts a YouTube watch/share URL to an embeddable player URL, or null if it isn't one. */
+function youtube_embed_url(?string $url): ?string
+{
+    if (!$url) {
+        return null;
+    }
+    $patterns = [
+        '~youtu\.be/([A-Za-z0-9_-]{6,})~',
+        '~youtube\.com/watch\?(?:.*&)?v=([A-Za-z0-9_-]{6,})~',
+        '~youtube\.com/embed/([A-Za-z0-9_-]{6,})~',
+        '~youtube\.com/shorts/([A-Za-z0-9_-]{6,})~',
+    ];
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $url, $m)) {
+            return 'https://www.youtube.com/embed/' . $m[1];
+        }
+    }
+    return null;
+}
+
 function bgg_designer_url(int $id): string
 {
     return 'https://boardgamegeek.com/boardgamedesigner/' . $id;

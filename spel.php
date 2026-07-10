@@ -33,17 +33,14 @@ require __DIR__ . '/includes/header.php';
       <?php else: ?>
         <div class="no-image" style="aspect-ratio:3/4;">Geen afbeelding</div>
       <?php endif; ?>
+      <button type="button" class="edit-icon-btn" data-open-modal="edit-game-modal" title="Spel bewerken" aria-label="Spel bewerken">&#9998;</button>
     </div>
     <div class="game-detail-actions">
-      <?php if ($myEntry): ?>
-        <button type="button" class="btn btn-secondary" data-action="remove-game" data-game-id="<?= $gameId ?>">Verwijder uit mijn collectie</button>
-      <?php else: ?>
+      <?php if (!$myEntry): ?>
         <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Toevoegen aan mijn collectie</button>
       <?php endif; ?>
 
       <a class="btn btn-secondary" href="<?= h($game['how_to_play_url'] ?: youtube_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">&#9654; How to play</a>
-
-      <button type="button" class="btn btn-secondary" data-open-modal="edit-game-modal">Bewerken</button>
 
       <?php if ($game['bgg_id']): ?>
         <button type="button" class="btn btn-secondary" data-action="refresh-bgg" data-game-id="<?= $gameId ?>">&#8635; Update with BGG</button>
@@ -76,6 +73,13 @@ require __DIR__ . '/includes/header.php';
 
     <?php if ($game['description']): ?>
       <p style="margin-top:1.5rem;max-width:48rem;white-space:pre-line;color:var(--text-dim);"><?= h($game['description']) ?></p>
+    <?php endif; ?>
+
+    <?php $embedUrl = youtube_embed_url($game['how_to_play_url']); ?>
+    <?php if ($embedUrl): ?>
+      <div class="video-embed">
+        <iframe src="<?= h($embedUrl) ?>" title="How to play video" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
     <?php endif; ?>
 
     <?php if ($designers || $artists): ?>
