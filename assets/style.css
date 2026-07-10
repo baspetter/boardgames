@@ -175,7 +175,7 @@ a {
 /* Main nav: big buttons below the header banner */
 .main-nav {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   width: 100%;
   max-width: var(--site-max-width);
   margin: 0 auto;
@@ -284,7 +284,7 @@ input:focus, textarea:focus, select:focus {
 .game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 0.25rem;
+  gap: 0.5rem;
 }
 @media (min-width: 768px) {
   .game-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
@@ -297,6 +297,7 @@ input:focus, textarea:focus, select:focus {
   display: block;
   background: var(--surface);
   overflow: hidden;
+  border-radius: 0.375rem;
   position: relative;
 }
 .game-card .card-overlay {
