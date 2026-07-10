@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   email           VARCHAR(255) NOT NULL UNIQUE,
   username        VARCHAR(64) NOT NULL UNIQUE,
   password_hash   VARCHAR(255) NOT NULL,
+  accent_color    VARCHAR(7) NULL,        -- e.g. "#e63946"; NULL = default site color
   invite_code_id  INT NULL,
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (invite_code_id) REFERENCES invite_codes(id) ON DELETE SET NULL

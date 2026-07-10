@@ -3,7 +3,7 @@
   --surface: #151a24;
   --surface-hover: #1e2530;
   --accent: #e63946;
-  --accent-hover: #ff4d5e;
+  --accent-hover: color-mix(in srgb, var(--accent) 82%, white);
   --text: #f2f2f2;
   --text-dim: rgba(255, 255, 255, 0.6);
   --text-dimmer: rgba(255, 255, 255, 0.4);

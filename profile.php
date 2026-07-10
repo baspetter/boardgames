@@ -40,6 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+    } elseif ($action === 'update_appearance') {
+        if (!empty($_POST['reset_color'])) {
+            db()->prepare('UPDATE users SET accent_color = NULL WHERE id = ?')->execute([$userId]);
+            $_SESSION['accent_color'] = null;
+            $user['accent_color'] = null;
+            $success = 'Accent color reset to default.';
+        } else {
+            $accentColor = trim($_POST['accent_color'] ?? '');
+            if (!is_valid_hex_color($accentColor)) {
+                $error = 'Invalid color';
+            } else {
+                db()->prepare('UPDATE users SET accent_color = ? WHERE id = ?')->execute([$accentColor, $userId]);
+                $_SESSION['accent_color'] = $accentColor;
+                $user['accent_color'] = $accentColor;
+                $success = 'Accent color updated.';
+            }
+        }
     } elseif ($action === 'change_password') {
         $currentPassword = (string) ($_POST['current_password'] ?? '');
         $newPassword = (string) ($_POST['new_password'] ?? '');
@@ -68,6 +85,21 @@ require __DIR__ . '/includes/header.php';
     <input type="email" name="email" placeholder="Email address" value="<?= h($user['email']) ?>" required>
     <input type="text" name="username" placeholder="Username" minlength="3" value="<?= h($user['username']) ?>" required>
     <button type="submit" class="btn btn-accent">Save changes</button>
+  </form>
+
+  <hr style="border-color:var(--border);margin:1.5rem 0;">
+
+  <h2>Appearance</h2>
+  <form method="post" class="form-stack">
+    <input type="hidden" name="action" value="update_appearance">
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <input type="color" name="accent_color" value="<?= h($user['accent_color'] ?? '#e63946') ?>" style="width:3rem;height:2.5rem;padding:0.25rem;flex-shrink:0;">
+      <span class="hint">Accent color used throughout the site (buttons, links, highlights)</span>
+    </div>
+    <div class="field-row">
+      <button type="submit" class="btn btn-accent">Save color</button>
+      <button type="submit" name="reset_color" value="1" class="btn btn-secondary">Reset to default</button>
+    </div>
   </form>
 
   <hr style="border-color:var(--border);margin:1.5rem 0;">

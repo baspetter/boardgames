@@ -61,6 +61,12 @@ function generate_code(int $bytes = 4): string
     return strtoupper(bin2hex(random_bytes($bytes)));
 }
 
+/** Validates a "#rrggbb" hex color string. */
+function is_valid_hex_color(string $value): bool
+{
+    return (bool) preg_match('/^#[0-9a-fA-F]{6}$/', $value);
+}
+
 /** Decodes a JSON column value (categories/mechanics/designers/artists) safely. */
 function json_col(mixed $value): array
 {

@@ -12,6 +12,10 @@ $activeNav = $activeNav ?? null;
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= h($pageTitle) ?></title>
   <link rel="stylesheet" href="/assets/style.css">
+  <?php $accentColor = current_accent_color(); ?>
+  <?php if ($accentColor && is_valid_hex_color($accentColor)): ?>
+    <style>:root { --accent: <?= h($accentColor) ?>; }</style>
+  <?php endif; ?>
 </head>
 <body>
 <?php if ($loggedIn): ?>

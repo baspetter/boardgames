@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $user = find_user_by_email($email);
     if ($user && password_verify($password, $user['password_hash'])) {
-        login_user((int) $user['id'], $user['username']);
+        login_user((int) $user['id'], $user['username'], $user['accent_color'] ?? null);
         $callback = $_POST['callback'] ?? '/';
         redirect(str_starts_with($callback, '/') ? $callback : '/');
     } else {

@@ -23,6 +23,12 @@ function current_username(): ?string
     return $_SESSION['username'] ?? null;
 }
 
+function current_accent_color(): ?string
+{
+    start_session();
+    return $_SESSION['accent_color'] ?? null;
+}
+
 function require_login(): int
 {
     $userId = current_user_id();
@@ -34,12 +40,13 @@ function require_login(): int
     return $userId;
 }
 
-function login_user(int $userId, string $username): void
+function login_user(int $userId, string $username, ?string $accentColor = null): void
 {
     start_session();
     session_regenerate_id(true);
     $_SESSION['user_id'] = $userId;
     $_SESSION['username'] = $username;
+    $_SESSION['accent_color'] = $accentColor;
 }
 
 function logout_user(): void
