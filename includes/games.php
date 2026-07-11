@@ -2,6 +2,7 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/bgg.php';
 require_once __DIR__ . '/image.php';
+require_once __DIR__ . '/functions.php';
 
 const GAME_CACHE_TTL_DAYS = 30;
 
@@ -184,4 +185,57 @@ function update_game(int $gameId, array $input): void
     $params[] = $gameId;
     $sql = 'UPDATE games SET ' . implode(', ', $set) . ' WHERE id = ?';
     db()->prepare($sql)->execute($params);
+}
+
+/** Games (excluding $excludeGameId) from $userId's own collection, ranked by shared category/mechanic tags with $tags. */
+function get_similar_games_in_collection(int $userId, int $excludeGameId, array $tags, int $limit = 6): array
+{
+    if (empty($tags)) {
+        return [];
+    }
+    $stmt = db()->prepare(
+        'SELECT g.* FROM collection_entries ce
+         JOIN games g ON g.id = ce.game_id
+         WHERE ce.user_id = ? AND g.id != ?'
+    );
+    $stmt->execute([$userId, $excludeGameId]);
+    return rank_games_by_tag_overlap($stmt->fetchAll(), $tags, $limit);
+}
+
+/** Games (excluding $excludeGameId and anything already in $userId's own collection) owned by $userId's playgroup-mates, ranked by shared tags. */
+function get_similar_games_in_playgroups(int $userId, int $excludeGameId, array $tags, int $limit = 6): array
+{
+    if (empty($tags)) {
+        return [];
+    }
+    $stmt = db()->prepare(
+        'SELECT DISTINCT g.* FROM collection_entries ce
+         JOIN games g ON g.id = ce.game_id
+         WHERE ce.user_id IN (
+           SELECT pgm2.user_id FROM play_group_members pgm1
+           JOIN play_group_members pgm2 ON pgm2.play_group_id = pgm1.play_group_id
+           WHERE pgm1.user_id = ?
+         )
+         AND ce.user_id != ?
+         AND g.id != ?
+         AND g.id NOT IN (SELECT game_id FROM collection_entries WHERE user_id = ?)'
+    );
+    $stmt->execute([$userId, $userId, $excludeGameId, $userId]);
+    return rank_games_by_tag_overlap($stmt->fetchAll(), $tags, $limit);
+}
+
+/** Sorts $games by number of tags (case-insensitive) they share with $tags, dropping non-matches. */
+function rank_games_by_tag_overlap(array $games, array $tags, int $limit): array
+{
+    $tagSet = array_map('mb_strtolower', $tags);
+    $scored = [];
+    foreach ($games as $g) {
+        $gameTags = array_map('mb_strtolower', array_merge(json_col($g['categories']), json_col($g['mechanics'])));
+        $overlap = count(array_intersect($tagSet, $gameTags));
+        if ($overlap > 0) {
+            $scored[] = ['game' => $g, 'overlap' => $overlap];
+        }
+    }
+    usort($scored, fn($a, $b) => $b['overlap'] <=> $a['overlap'] ?: ($b['game']['bgg_rating'] <=> $a['game']['bgg_rating']));
+    return array_slice(array_column($scored, 'game'), 0, $limit);
 }

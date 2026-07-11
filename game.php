@@ -23,37 +23,26 @@ $designers = json_col($game['designers']);
 $artists = json_col($game['artists']);
 $embedUrl = youtube_embed_url($game['how_to_play_url']);
 
+$similarTags = array_merge($categories, $mechanics);
+$similarOwn = get_similar_games_in_collection($userId, $gameId, $similarTags);
+$similarGroup = get_similar_games_in_playgroups($userId, $gameId, $similarTags);
+
 $pageTitle = $game['name'] . ' - ' . SITE_NAME;
 require __DIR__ . '/includes/header.php';
 ?>
-<div class="game-detail">
-  <div>
-    <div class="game-detail-cover">
-      <?php if ($game['image']): ?>
-        <img src="<?= h($game['image']) ?>" alt="<?= h($game['name']) ?>">
-      <?php else: ?>
-        <div class="no-image" style="aspect-ratio:3/4;">No image</div>
-      <?php endif; ?>
-      <button type="button" class="edit-icon-btn" data-open-modal="edit-game-modal" title="Edit game" aria-label="Edit game">&#9998;</button>
-    </div>
-    <div class="game-detail-actions">
-      <?php if (!$myEntry): ?>
-        <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
-      <?php endif; ?>
+<h1 style="margin-top:0;"><?= h($game['name']) ?></h1>
 
-      <?php if (!$embedUrl): ?>
-        <a class="btn btn-secondary" href="<?= h($game['how_to_play_url'] ?: youtube_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">&#9654; How to play</a>
-      <?php endif; ?>
-
-      <?php if ($game['bgg_id']): ?>
-        <button type="button" class="btn btn-secondary" data-action="refresh-bgg" data-game-id="<?= $gameId ?>">&#8635; Update with BGG</button>
-        <a class="btn" style="color:var(--text-dimmer);text-align:center;" href="https://boardgamegeek.com/boardgame/<?= (int) $game['bgg_id'] ?>" target="_blank" rel="noreferrer">View on BoardGameGeek</a>
-      <?php endif; ?>
-    </div>
+<div class="game-hero">
+  <div class="game-hero-cover">
+    <?php if ($game['image']): ?>
+      <img src="<?= h($game['image']) ?>" alt="<?= h($game['name']) ?>">
+    <?php else: ?>
+      <div class="no-image" style="aspect-ratio:3/4;">No image</div>
+    <?php endif; ?>
+    <button type="button" class="edit-icon-btn" data-open-modal="edit-game-modal" title="Edit game" aria-label="Edit game">&#9998;</button>
   </div>
 
-  <div>
-    <h1 style="margin-top:0;"><?= h($game['name']) ?></h1>
+  <div class="game-hero-info">
     <div class="stat-chips">
       <?php if ($game['year_published']): ?>
         <div class="stat-chip">
@@ -104,53 +93,78 @@ require __DIR__ . '/includes/header.php';
       </div>
     <?php endif; ?>
 
-    <?php if ($game['description']): ?>
-      <p style="margin-top:1.5rem;max-width:48rem;white-space:pre-line;color:var(--text-dim);"><?= h($game['description']) ?></p>
-    <?php endif; ?>
+    <div class="game-detail-actions">
+      <?php if (!$myEntry): ?>
+        <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
+      <?php endif; ?>
 
-    <?php if ($embedUrl): ?>
-      <div class="video-embed">
-        <iframe src="<?= h($embedUrl) ?>" title="How to play video" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
-      </div>
-    <?php endif; ?>
+      <?php if (!$embedUrl): ?>
+        <a class="btn btn-secondary" href="<?= h($game['how_to_play_url'] ?: youtube_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">&#9654; How to play</a>
+      <?php endif; ?>
 
-    <?php if ($designers || $artists): ?>
-      <div class="detail-columns">
-        <?php if ($designers): ?>
-          <div>
-            <p class="section-label">Designers</p>
-            <ul style="padding-left:1.1rem;margin:0;">
-              <?php foreach ($designers as $d): ?>
-                <li><a href="<?= h(bgg_designer_url($d['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($d['name']) ?></a></li>
-              <?php endforeach; ?>
-            </ul>
-          </div>
-        <?php endif; ?>
-        <?php if ($artists): ?>
-          <div>
-            <p class="section-label">Artists</p>
-            <ul style="padding-left:1.1rem;margin:0;">
-              <?php foreach ($artists as $a): ?>
-                <li><a href="<?= h(bgg_artist_url($a['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($a['name']) ?></a></li>
-              <?php endforeach; ?>
-            </ul>
-          </div>
-        <?php endif; ?>
-      </div>
-    <?php endif; ?>
+      <?php if ($game['bgg_id']): ?>
+        <button type="button" class="btn btn-secondary" data-action="refresh-bgg" data-game-id="<?= $gameId ?>">&#8635; Update with BGG</button>
+        <a class="btn" style="color:var(--text-dimmer);text-align:center;" href="https://boardgamegeek.com/boardgame/<?= (int) $game['bgg_id'] ?>" target="_blank" rel="noreferrer">View on BoardGameGeek</a>
+      <?php endif; ?>
+    </div>
 
     <?php if ($owners): ?>
-      <div style="margin-top:1.5rem;">
+      <div>
         <p class="section-label">Owned by</p>
         <div class="tags">
           <?php foreach ($owners as $o): ?><span class="pill"><?= h($o['username']) ?></span><?php endforeach; ?>
         </div>
       </div>
     <?php endif; ?>
-
-    <p style="margin-top:2rem;"><a href="/" class="hint">&larr; Back to collection</a></p>
   </div>
 </div>
+
+<?php if ($game['description']): ?>
+  <p class="game-description"><?= h($game['description']) ?></p>
+<?php endif; ?>
+
+<?php if ($embedUrl): ?>
+  <div class="video-embed">
+    <iframe src="<?= h($embedUrl) ?>" title="How to play video" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+<?php endif; ?>
+
+<?php if ($designers || $artists): ?>
+  <div class="detail-columns">
+    <?php if ($designers): ?>
+      <div>
+        <p class="section-label">Designers</p>
+        <ul style="padding-left:1.1rem;margin:0;">
+          <?php foreach ($designers as $d): ?>
+            <li><a href="<?= h(bgg_designer_url($d['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($d['name']) ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
+    <?php if ($artists): ?>
+      <div>
+        <p class="section-label">Artists</p>
+        <ul style="padding-left:1.1rem;margin:0;">
+          <?php foreach ($artists as $a): ?>
+            <li><a href="<?= h(bgg_artist_url($a['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($a['name']) ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
+  </div>
+<?php endif; ?>
+
+<?php if ($similarOwn): ?>
+  <h2 style="margin-top:2.5rem;">Similar in your collection</h2>
+  <?php render_game_grid($similarOwn); ?>
+<?php endif; ?>
+
+<?php if ($similarGroup): ?>
+  <h2 style="margin-top:2.5rem;">Similar in your playgroups</h2>
+  <?php render_game_grid($similarGroup); ?>
+<?php endif; ?>
+
+<p style="margin-top:2rem;"><a href="/" class="hint">&larr; Back to collection</a></p>
 
 <?php require __DIR__ . '/includes/edit_game_modal.php'; ?>
 <?php require __DIR__ . '/includes/footer.php'; ?>
