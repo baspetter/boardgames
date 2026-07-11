@@ -13,6 +13,7 @@ if (!$gameId || !find_game($gameId)) {
 
 $toIntOrNull = fn($v) => ($v !== null && $v !== '') ? (int) $v : null;
 $toFloatOrNull = fn($v) => ($v !== null && $v !== '') ? (float) $v : null;
+$toStringOrNull = fn($v) => ($v !== null && trim((string) $v) !== '') ? trim((string) $v) : null;
 
 try {
     update_game($gameId, [
@@ -23,7 +24,7 @@ try {
         'yearPublished' => $toIntOrNull($data['yearPublished'] ?? null),
         'minPlayers' => $toIntOrNull($data['minPlayers'] ?? null),
         'maxPlayers' => $toIntOrNull($data['maxPlayers'] ?? null),
-        'bestPlayers' => $toIntOrNull($data['bestPlayers'] ?? null),
+        'bestPlayers' => $toStringOrNull($data['bestPlayers'] ?? null),
         'playingTime' => $toIntOrNull($data['playingTime'] ?? null),
         'weight' => $toFloatOrNull($data['weight'] ?? null),
         'gameType' => $data['gameType'] ?? null,

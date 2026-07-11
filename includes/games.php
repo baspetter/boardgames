@@ -94,7 +94,7 @@ function upsert_bgg_game(?int $gameId, array $details): array
     return find_game($gameId);
 }
 
-/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
+/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?string,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
     if (!empty($input['imageUploadPath'])) {

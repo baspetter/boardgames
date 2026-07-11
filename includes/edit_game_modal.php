@@ -23,11 +23,11 @@ require_once __DIR__ . '/game-types.php';
         <input type="number" name="yearPublished" placeholder="Year" min="1000" max="3000" value="<?= h((string) ($game['year_published'] ?? '')) ?>">
         <input type="number" name="minPlayers" placeholder="Min. players" min="1" value="<?= h((string) ($game['min_players'] ?? '')) ?>">
         <input type="number" name="maxPlayers" placeholder="Max. players" min="1" value="<?= h((string) ($game['max_players'] ?? '')) ?>">
-        <input type="number" name="bestPlayers" placeholder="Best player count" min="1" value="<?= h((string) ($game['best_players'] ?? '')) ?>">
+        <input type="text" name="bestPlayers" placeholder="Best player count (e.g. 3 or 2-4)" inputmode="numeric" value="<?= h((string) ($game['best_players'] ?? '')) ?>">
       </div>
       <div class="field-row">
         <input type="number" name="playingTime" placeholder="Playing time (min)" min="1" value="<?= h((string) ($game['playing_time'] ?? '')) ?>">
-        <input type="number" name="weight" placeholder="Complexity (1-5)" min="1" max="5" step="0.01" value="<?= h((string) ($game['weight'] ?? '')) ?>">
+        <input type="text" name="weight" placeholder="Complexity (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" value="<?= h((string) ($game['weight'] ?? '')) ?>">
       </div>
       <div>
         <select name="gameType[]" multiple size="5">

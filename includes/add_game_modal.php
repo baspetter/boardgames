@@ -39,11 +39,11 @@
           <input type="number" name="yearPublished" placeholder="Year" min="1000" max="3000">
           <input type="number" name="minPlayers" placeholder="Min. players" min="1">
           <input type="number" name="maxPlayers" placeholder="Max. players" min="1">
-          <input type="number" name="bestPlayers" placeholder="Best player count" min="1">
+          <input type="text" name="bestPlayers" placeholder="Best player count (e.g. 3 or 2-4)" inputmode="numeric">
         </div>
         <div class="field-row">
           <input type="number" name="playingTime" placeholder="Playing time (min)" min="1">
-          <input type="number" name="weight" placeholder="Complexity (1-5)" min="1" max="5" step="0.01">
+          <input type="text" name="weight" placeholder="Complexity (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*">
         </div>
         <div>
           <select name="gameType[]" multiple size="5">

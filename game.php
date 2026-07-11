@@ -21,6 +21,7 @@ $categories = json_col($game['categories']);
 $mechanics = json_col($game['mechanics']);
 $designers = json_col($game['designers']);
 $artists = json_col($game['artists']);
+$embedUrl = youtube_embed_url($game['how_to_play_url']);
 
 $pageTitle = $game['name'] . ' - ' . SITE_NAME;
 require __DIR__ . '/includes/header.php';
@@ -40,7 +41,9 @@ require __DIR__ . '/includes/header.php';
         <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
       <?php endif; ?>
 
-      <a class="btn btn-secondary" href="<?= h($game['how_to_play_url'] ?: youtube_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">&#9654; How to play</a>
+      <?php if (!$embedUrl): ?>
+        <a class="btn btn-secondary" href="<?= h($game['how_to_play_url'] ?: youtube_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">&#9654; How to play</a>
+      <?php endif; ?>
 
       <?php if ($game['bgg_id']): ?>
         <button type="button" class="btn btn-secondary" data-action="refresh-bgg" data-game-id="<?= $gameId ?>">&#8635; Update with BGG</button>
@@ -51,16 +54,46 @@ require __DIR__ . '/includes/header.php';
 
   <div>
     <h1 style="margin-top:0;"><?= h($game['name']) ?></h1>
-    <div class="game-meta-row">
-      <?php if ($game['year_published']): ?><span><?= (int) $game['year_published'] ?></span><?php endif; ?>
-      <?php if ($game['min_players'] && $game['max_players']): ?>
-        <span><?= $game['min_players'] == $game['max_players'] ? h($game['min_players'] . ' players') : h($game['min_players'] . '–' . $game['max_players'] . ' players') ?></span>
+    <div class="stat-chips">
+      <?php if ($game['year_published']): ?>
+        <div class="stat-chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <div><span class="stat-value"><?= (int) $game['year_published'] ?></span><span class="stat-label">Year</span></div>
+        </div>
       <?php endif; ?>
-      <?php if ($game['best_players']): ?><span>best with <?= (int) $game['best_players'] ?></span><?php endif; ?>
-      <?php if ($game['playing_time']): ?><span><?= (int) $game['playing_time'] ?> min</span><?php endif; ?>
-      <?php if ($game['min_age']): ?><span><?= (int) $game['min_age'] ?>+</span><?php endif; ?>
-      <?php if ($game['weight']): ?><span>Complexity <?= h(number_format((float) $game['weight'], 2)) ?>/5</span><?php endif; ?>
-      <?php if ($game['bgg_rating']): ?><span class="rating">&#9733; <?= h(number_format((float) $game['bgg_rating'], 1)) ?></span><?php endif; ?>
+      <?php if ($game['min_players'] && $game['max_players']): ?>
+        <div class="stat-chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <div>
+            <span class="stat-value"><?= $game['min_players'] == $game['max_players'] ? h($game['min_players']) : h($game['min_players'] . '–' . $game['max_players']) ?></span>
+            <span class="stat-label"><?= $game['best_players'] ? 'Players · best ' . h($game['best_players']) : 'Players' ?></span>
+          </div>
+        </div>
+      <?php endif; ?>
+      <?php if ($game['playing_time']): ?>
+        <div class="stat-chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <div><span class="stat-value"><?= (int) $game['playing_time'] ?> min</span><span class="stat-label">Playing time</span></div>
+        </div>
+      <?php endif; ?>
+      <?php if ($game['min_age']): ?>
+        <div class="stat-chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <div><span class="stat-value"><?= (int) $game['min_age'] ?>+</span><span class="stat-label">Age</span></div>
+        </div>
+      <?php endif; ?>
+      <?php if ($game['weight']): ?>
+        <div class="stat-chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"></line><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line></svg>
+          <div><span class="stat-value"><?= h(number_format((float) $game['weight'], 2)) ?>/5</span><span class="stat-label">Complexity</span></div>
+        </div>
+      <?php endif; ?>
+      <?php if ($game['bgg_rating']): ?>
+        <div class="stat-chip stat-chip-rating">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <div><span class="stat-value"><?= h(number_format((float) $game['bgg_rating'], 1)) ?></span><span class="stat-label">BGG rating</span></div>
+        </div>
+      <?php endif; ?>
     </div>
 
     <?php if ($categories || $mechanics): ?>
@@ -75,7 +108,6 @@ require __DIR__ . '/includes/header.php';
       <p style="margin-top:1.5rem;max-width:48rem;white-space:pre-line;color:var(--text-dim);"><?= h($game['description']) ?></p>
     <?php endif; ?>
 
-    <?php $embedUrl = youtube_embed_url($game['how_to_play_url']); ?>
     <?php if ($embedUrl): ?>
       <div class="video-embed">
         <iframe src="<?= h($embedUrl) ?>" title="How to play video" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
