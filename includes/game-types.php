@@ -5,5 +5,5 @@
 const GAME_TYPES = [
     'Strategy', 'Family', 'Party', 'Cooperative', 'Card Game',
     'Dice Game', 'Puzzle', 'Wargame', "Children's Game", 'Abstract',
-    'Thematic', 'Campaign', 'Other',
+    'Thematic', 'Campaign', 'Great for solo', 'Other',
 ];

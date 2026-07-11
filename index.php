@@ -7,45 +7,41 @@ $stmt = db()->prepare('SELECT * FROM games g JOIN collection_entries ce ON ce.ga
 $stmt->execute([$userId]);
 $games = $stmt->fetchAll();
 
-$availableTypes = [];
+$gamesByType = [];
+$uncategorized = [];
 foreach ($games as $g) {
-    foreach (json_col($g['categories']) as $type) {
-        $availableTypes[$type] = true;
+    $types = json_col($g['categories']);
+    if (empty($types)) {
+        $uncategorized[] = $g;
+        continue;
+    }
+    foreach ($types as $type) {
+        $gamesByType[$type][] = $g;
     }
 }
-$availableTypes = array_keys($availableTypes);
-sort($availableTypes);
-
-$selectedType = trim((string) ($_GET['type'] ?? ''));
-if ($selectedType !== '') {
-    $games = array_values(array_filter(
-        $games,
-        fn($g) => in_array($selectedType, json_col($g['categories']), true)
-    ));
-}
+ksort($gamesByType, SORT_NATURAL | SORT_FLAG_CASE);
 
 $pageTitle = SITE_NAME;
 $activeNav = 'collection';
 require __DIR__ . '/includes/header.php';
 ?>
-<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
   <h1 style="margin:0;">My collection</h1>
-  <div style="display:flex;align-items:center;gap:0.75rem;">
-    <?php if ($availableTypes): ?>
-      <form method="get" id="type-filter-form">
-        <select name="type" id="type-filter-select">
-          <option value="">All types</option>
-          <?php foreach ($availableTypes as $type): ?>
-            <option value="<?= h($type) ?>" <?= $selectedType === $type ? 'selected' : '' ?>><?= h($type) ?></option>
-          <?php endforeach; ?>
-        </select>
-      </form>
-    <?php endif; ?>
-    <button type="button" class="btn btn-accent" data-open-modal="add-game-modal">+ Add game</button>
-  </div>
+  <button type="button" class="btn btn-accent" data-open-modal="add-game-modal">+ Add game</button>
 </div>
 
-<?php render_game_grid($games, $selectedType !== '' ? "No games of type \"$selectedType\" in your collection." : "You haven't added any games yet. Click 'Add game' to get started."); ?>
+<?php if (empty($games)): ?>
+  <p class="empty-state">You haven't added any games yet. Click 'Add game' to get started.</p>
+<?php else: ?>
+  <?php foreach ($gamesByType as $type => $typeGames): ?>
+    <h2 class="collection-section-title"><?= h($type) ?></h2>
+    <?php render_game_grid($typeGames); ?>
+  <?php endforeach; ?>
+  <?php if ($uncategorized): ?>
+    <h2 class="collection-section-title">Uncategorized</h2>
+    <?php render_game_grid($uncategorized); ?>
+  <?php endif; ?>
+<?php endif; ?>
 
 <?php require __DIR__ . '/includes/add_game_modal.php'; ?>
 <?php require __DIR__ . '/includes/footer.php'; ?>

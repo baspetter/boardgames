@@ -39,14 +39,6 @@ function escapeHtml(str) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Collection type filter: submit on change so picking a type applies immediately.
-  const typeFilterSelect = document.getElementById('type-filter-select');
-  if (typeFilterSelect) {
-    typeFilterSelect.addEventListener('change', () => {
-      typeFilterSelect.closest('form').submit();
-    });
-  }
-
   // Generic modal open/close (data-open-modal="id" / data-close-modal)
   document.querySelectorAll('[data-open-modal]').forEach((btn) => {
     btn.addEventListener('click', () => {
