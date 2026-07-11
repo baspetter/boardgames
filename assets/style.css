@@ -384,15 +384,32 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* Game detail */
-.game-hero {
+.game-top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-top: 0.75rem;
+}
+.game-tagline {
+  flex: 1 1 16rem;
+  min-width: 0;
+  margin: 0.4rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-dim);
+}
+.game-main-row {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
   align-items: start;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 @media (min-width: 768px) {
-  .game-hero { grid-template-columns: 420px 1fr; }
+  .game-main-row { grid-template-columns: 400px 1fr; }
 }
 .game-hero-cover {
   position: relative;
@@ -406,14 +423,8 @@ input:focus, textarea:focus, select:focus {
   width: 100%;
   height: auto;
 }
-.game-hero-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 .game-description {
-  margin-top: 1.5rem;
-  max-width: 60rem;
+  margin: 0;
   white-space: pre-line;
   color: var(--text-dim);
 }
@@ -437,12 +448,20 @@ input:focus, textarea:focus, select:focus {
 .edit-icon-btn:hover {
   background: var(--accent);
 }
+.game-video-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 2.5rem;
+}
+@media (min-width: 768px) {
+  .game-video-row { grid-template-columns: 2fr 1fr; }
+}
 .video-embed {
   position: relative;
   width: 100%;
-  max-width: 48rem;
   aspect-ratio: 16 / 9;
-  margin-top: 1.5rem;
   border-radius: 0.5rem;
   overflow: hidden;
   background: var(--surface);
@@ -454,7 +473,42 @@ input:focus, textarea:focus, select:focus {
   height: 100%;
   border: none;
 }
+.similar-list {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.similar-list li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+.similar-list li a:hover {
+  background: var(--surface-hover);
+}
+.similar-list img,
+.similar-list .no-image {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.375rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+.similar-list span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .game-detail-actions {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
