@@ -385,9 +385,7 @@ input:focus, textarea:focus, select:focus {
 
 /* Game detail */
 .game-tagline {
-  max-width: 40rem;
-  margin: 0.4rem auto 0;
-  text-align: center;
+  margin: 0.2rem 0 0;
   color: var(--text-dim);
 }
 .game-main-row {

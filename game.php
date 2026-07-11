@@ -29,11 +29,6 @@ $similarGroup = get_similar_games_in_playgroups($userId, $gameId, $similarTags);
 $pageTitle = $game['name'] . ' - ' . SITE_NAME;
 require __DIR__ . '/includes/header.php';
 ?>
-<h1 style="margin-top:0;text-align:center;"><?= h($game['name']) ?></h1>
-<?php if ($game['tagline']): ?>
-  <p class="game-tagline"><?= h($game['tagline']) ?></p>
-<?php endif; ?>
-
 <div class="game-main-row">
   <div>
     <div class="game-hero-cover">
@@ -59,6 +54,11 @@ require __DIR__ . '/includes/header.php';
   </div>
 
   <div>
+    <h1 style="margin-top:0;"><?= h($game['name']) ?></h1>
+    <?php if ($game['tagline']): ?>
+      <p class="game-tagline"><?= h($game['tagline']) ?></p>
+    <?php endif; ?>
+
     <div class="stat-chips">
       <?php if ($game['year_published']): ?>
         <div class="stat-chip">
