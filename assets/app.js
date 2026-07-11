@@ -175,6 +175,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Reorder categories: drag-and-drop list + save
+  const categoryList = document.getElementById('category-order-list');
+  if (categoryList) {
+    let draggedEl = null;
+    categoryList.querySelectorAll('li').forEach((li) => {
+      li.addEventListener('dragstart', () => {
+        draggedEl = li;
+        li.classList.add('dragging');
+      });
+      li.addEventListener('dragend', () => {
+        li.classList.remove('dragging');
+        draggedEl = null;
+      });
+      li.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!draggedEl || draggedEl === li) return;
+        const rect = li.getBoundingClientRect();
+        const before = e.clientY - rect.top < rect.height / 2;
+        categoryList.insertBefore(draggedEl, before ? li : li.nextSibling);
+      });
+    });
+
+    const saveOrderBtn = document.getElementById('save-category-order');
+    if (saveOrderBtn) {
+      saveOrderBtn.addEventListener('click', () => {
+        const order = [...categoryList.querySelectorAll('li')].map((li) => li.dataset.type);
+        saveOrderBtn.disabled = true;
+        postJson('/api/save-category-order.php', { order })
+          .then(() => window.location.reload())
+          .catch((err) => {
+            showError('category-order-error', err.message);
+            saveOrderBtn.disabled = false;
+          });
+      });
+    }
+  }
+
   // Simple one-off action buttons (remove from collection, add existing game
   // to my collection, refresh from BGG) via data attributes.
   document.querySelectorAll('[data-action]').forEach((btn) => {

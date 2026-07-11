@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
   username        VARCHAR(64) NOT NULL UNIQUE,
   password_hash   VARCHAR(255) NOT NULL,
   accent_color    VARCHAR(7) NULL,        -- e.g. "#e63946"; NULL = default site color
+  category_order  JSON NULL,              -- user's preferred collection section order, e.g. ["Cooperative","Family"]
   invite_code_id  INT NULL,
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (invite_code_id) REFERENCES invite_codes(id) ON DELETE SET NULL
