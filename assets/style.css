@@ -471,6 +471,7 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
