@@ -688,7 +688,6 @@ input:focus, textarea:focus, select:focus {
   margin-bottom: 0.25rem;
 }
 @media (min-width: 480px) {
-  .field-row-4 { grid-template-columns: repeat(4, 1fr); }
   .field-row-3 { grid-template-columns: repeat(3, 1fr); }
 }
 .search-results {

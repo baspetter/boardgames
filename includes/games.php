@@ -60,7 +60,6 @@ function upsert_bgg_game(?int $gameId, array $details): array
         'description' => $details['description'],
         'min_players' => $details['minPlayers'],
         'max_players' => $details['maxPlayers'],
-        'best_players' => $details['bestPlayers'],
         'playing_time' => $details['playingTime'],
         'min_play_time' => $details['minPlayTime'],
         'max_play_time' => $details['maxPlayTime'],
@@ -102,7 +101,7 @@ function parse_names_list(string $raw): array
     return array_values(array_map(fn($n) => ['name' => $n], $names));
 }
 
-/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?string,playingTime?:?int,weight?:?float,gameType?:?string[],designers?:?string,artists?:?string,howToPlayUrl?:?string} $input */
+/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string[],designers?:?string,artists?:?string,howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
     if (!empty($input['imageUploadPath'])) {
@@ -119,8 +118,8 @@ function create_manual_game(array $input): int
 
     $stmt = db()->prepare(
         'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description, tagline,
-            min_players, max_players, best_players, playing_time, weight, categories, designers, artists, how_to_play_url)
-         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            min_players, max_players, playing_time, weight, categories, designers, artists, how_to_play_url)
+         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         $input['name'],
@@ -131,7 +130,6 @@ function create_manual_game(array $input): int
         $input['tagline'] ?? null,
         $input['minPlayers'] ?? null,
         $input['maxPlayers'] ?? null,
-        $input['bestPlayers'] ?? null,
         $input['playingTime'] ?? null,
         $input['weight'] ?? null,
         json_encode($categories),
@@ -153,7 +151,6 @@ function update_game(int $gameId, array $input): void
         'yearPublished' => 'year_published',
         'minPlayers' => 'min_players',
         'maxPlayers' => 'max_players',
-        'bestPlayers' => 'best_players',
         'playingTime' => 'playing_time',
         'weight' => 'weight',
         'howToPlayUrl' => 'how_to_play_url',

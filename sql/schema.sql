@@ -53,7 +53,6 @@ CREATE TABLE IF NOT EXISTS games (
   tagline         VARCHAR(200) NULL,     -- short one-line blurb, set by the user (not auto-filled from BGG)
   min_players     SMALLINT NULL,
   max_players     SMALLINT NULL,
-  best_players    VARCHAR(20) NULL,      -- e.g. "3" or "2-4" (a range of tied "Best" counts)
   playing_time    SMALLINT NULL,
   min_play_time   SMALLINT NULL,
   max_play_time   SMALLINT NULL,

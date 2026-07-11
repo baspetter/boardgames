@@ -110,70 +110,6 @@ function bgg_search(string $query): array
     return $results;
 }
 
-/**
- * Picks the player count(s) most commonly voted "Best" in BGG's
- * suggested_numplayers poll, formatted as a display string (e.g. "3",
- * "2-4", or "2, 5" for a non-contiguous set). Ignores the open-ended
- * "N+" bucket. A count counts as "best" when its Best votes outnumber
- * its combined Recommended + Not Recommended votes — the same rule
- * BGG's own "Community Best" range roughly follows.
- */
-function bgg_best_player_range(SimpleXMLElement $item): ?string
-{
-    $poll = null;
-    foreach ($item->poll as $p) {
-        if ((string) $p['name'] === 'suggested_numplayers') {
-            $poll = $p;
-            break;
-        }
-    }
-    if ($poll === null) {
-        return null;
-    }
-
-    $bestCounts = [];
-    foreach ($poll->results as $results) {
-        $numplayers = (string) $results['numplayers'];
-        if (!ctype_digit($numplayers)) {
-            continue; // skips the "N+" bucket
-        }
-        $votes = ['Best' => 0, 'Recommended' => 0, 'Not Recommended' => 0];
-        foreach ($results->result as $option) {
-            $value = (string) $option['value'];
-            if (isset($votes[$value])) {
-                $votes[$value] = (int) $option['numvotes'];
-            }
-        }
-        if ($votes['Best'] > 0 && $votes['Best'] > $votes['Recommended'] + $votes['Not Recommended']) {
-            $bestCounts[] = (int) $numplayers;
-        }
-    }
-
-    if (empty($bestCounts)) {
-        return null;
-    }
-    sort($bestCounts);
-    return format_player_count_range($bestCounts);
-}
-
-/** Formats a sorted list of ints as contiguous ranges, e.g. [2,3,4,6] -> "2-4, 6". */
-function format_player_count_range(array $counts): string
-{
-    $ranges = [];
-    $start = $counts[0];
-    $prev = $counts[0];
-    foreach (array_slice($counts, 1) as $n) {
-        if ($n === $prev + 1) {
-            $prev = $n;
-            continue;
-        }
-        $ranges[] = $start === $prev ? (string) $start : "$start-$prev";
-        $start = $prev = $n;
-    }
-    $ranges[] = $start === $prev ? (string) $start : "$start-$prev";
-    return implode(', ', $ranges);
-}
-
 /** @return array<string, mixed> */
 function bgg_get_thing(int $bggId): array
 {
@@ -232,7 +168,6 @@ function bgg_get_thing(int $bggId): array
         'description' => isset($item->description) ? trim((string) $item->description) : null,
         'minPlayers' => isset($item->minplayers) ? (int) $item->minplayers['value'] : null,
         'maxPlayers' => isset($item->maxplayers) ? (int) $item->maxplayers['value'] : null,
-        'bestPlayers' => bgg_best_player_range($item),
         'playingTime' => isset($item->playingtime) ? (int) $item->playingtime['value'] : null,
         'minPlayTime' => isset($item->minplaytime) ? (int) $item->minplaytime['value'] : null,
         'maxPlayTime' => isset($item->maxplaytime) ? (int) $item->maxplaytime['value'] : null,

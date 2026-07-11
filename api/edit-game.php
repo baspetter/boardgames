@@ -25,7 +25,6 @@ try {
         'yearPublished' => $toIntOrNull($data['yearPublished'] ?? null),
         'minPlayers' => $toIntOrNull($data['minPlayers'] ?? null),
         'maxPlayers' => $toIntOrNull($data['maxPlayers'] ?? null),
-        'bestPlayers' => $toStringOrNull($data['bestPlayers'] ?? null),
         'playingTime' => $toIntOrNull($data['playingTime'] ?? null),
         'weight' => $toFloatOrNull($data['weight'] ?? null),
         'gameType' => $data['gameType'] ?? null,
