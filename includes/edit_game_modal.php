@@ -20,14 +20,14 @@ require_once __DIR__ . '/game-types.php';
       </div>
       <textarea name="description" placeholder="Description" rows="3"><?= h($game['description'] ?? '') ?></textarea>
       <div class="field-row field-row-4">
-        <input type="number" name="yearPublished" placeholder="Year" min="1000" max="3000" value="<?= h((string) ($game['year_published'] ?? '')) ?>">
-        <input type="number" name="minPlayers" placeholder="Min. players" min="1" value="<?= h((string) ($game['min_players'] ?? '')) ?>">
-        <input type="number" name="maxPlayers" placeholder="Max. players" min="1" value="<?= h((string) ($game['max_players'] ?? '')) ?>">
-        <input type="text" name="bestPlayers" placeholder="Best player count (e.g. 3 or 2-4)" inputmode="numeric" value="<?= h((string) ($game['best_players'] ?? '')) ?>">
+        <div><label class="field-label">Year</label><input type="number" name="yearPublished" placeholder="Year" min="1000" max="3000" value="<?= h((string) ($game['year_published'] ?? '')) ?>"></div>
+        <div><label class="field-label">Min. players</label><input type="number" name="minPlayers" placeholder="Min. players" min="1" value="<?= h((string) ($game['min_players'] ?? '')) ?>"></div>
+        <div><label class="field-label">Max. players</label><input type="number" name="maxPlayers" placeholder="Max. players" min="1" value="<?= h((string) ($game['max_players'] ?? '')) ?>"></div>
+        <div><label class="field-label">Best player count</label><input type="text" name="bestPlayers" placeholder="e.g. 3 or 2-4" inputmode="numeric" value="<?= h((string) ($game['best_players'] ?? '')) ?>"></div>
       </div>
       <div class="field-row">
-        <input type="number" name="playingTime" placeholder="Playing time (min)" min="1" value="<?= h((string) ($game['playing_time'] ?? '')) ?>">
-        <input type="text" name="weight" placeholder="Complexity (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" value="<?= h((string) ($game['weight'] ?? '')) ?>">
+        <div><label class="field-label">Playing time (min)</label><input type="number" name="playingTime" placeholder="Playing time (min)" min="1" value="<?= h((string) ($game['playing_time'] ?? '')) ?>"></div>
+        <div><label class="field-label">Complexity (1-5)</label><input type="text" name="weight" placeholder="Complexity (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" value="<?= h((string) ($game['weight'] ?? '')) ?>"></div>
       </div>
       <div>
         <select name="gameType[]" multiple size="5">

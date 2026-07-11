@@ -36,14 +36,14 @@
         </div>
         <textarea name="description" placeholder="Description" rows="3"></textarea>
         <div class="field-row field-row-4">
-          <input type="number" name="yearPublished" placeholder="Year" min="1000" max="3000">
-          <input type="number" name="minPlayers" placeholder="Min. players" min="1">
-          <input type="number" name="maxPlayers" placeholder="Max. players" min="1">
-          <input type="text" name="bestPlayers" placeholder="Best player count (e.g. 3 or 2-4)" inputmode="numeric">
+          <div><label class="field-label">Year</label><input type="number" name="yearPublished" placeholder="Year" min="1000" max="3000"></div>
+          <div><label class="field-label">Min. players</label><input type="number" name="minPlayers" placeholder="Min. players" min="1"></div>
+          <div><label class="field-label">Max. players</label><input type="number" name="maxPlayers" placeholder="Max. players" min="1"></div>
+          <div><label class="field-label">Best player count</label><input type="text" name="bestPlayers" placeholder="e.g. 3 or 2-4" inputmode="numeric"></div>
         </div>
         <div class="field-row">
-          <input type="number" name="playingTime" placeholder="Playing time (min)" min="1">
-          <input type="text" name="weight" placeholder="Complexity (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*">
+          <div><label class="field-label">Playing time (min)</label><input type="number" name="playingTime" placeholder="Playing time (min)" min="1"></div>
+          <div><label class="field-label">Complexity (1-5)</label><input type="text" name="weight" placeholder="Complexity (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*"></div>
         </div>
         <div>
           <select name="gameType[]" multiple size="5">

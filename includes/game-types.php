@@ -4,5 +4,6 @@
 // consistently as tags on the detail page either way.
 const GAME_TYPES = [
     'Strategy', 'Family', 'Party', 'Cooperative', 'Card Game',
-    'Dice Game', 'Puzzle', 'Wargame', "Children's Game", 'Abstract', 'Other',
+    'Dice Game', 'Puzzle', 'Wargame', "Children's Game", 'Abstract',
+    'Thematic', 'Campaign', 'Other',
 ];

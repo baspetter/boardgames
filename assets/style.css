@@ -586,6 +586,12 @@ input:focus, textarea:focus, select:focus {
   gap: 0.5rem;
   grid-template-columns: repeat(2, 1fr);
 }
+.field-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dimmer);
+  margin-bottom: 0.25rem;
+}
 @media (min-width: 480px) {
   .field-row-4 { grid-template-columns: repeat(4, 1fr); }
   .field-row-3 { grid-template-columns: repeat(3, 1fr); }
