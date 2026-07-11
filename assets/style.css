@@ -395,6 +395,9 @@ input:focus, textarea:focus, select:focus {
   align-items: start;
   margin-top: 1.5rem;
 }
+.game-main-row > div {
+  min-width: 0;
+}
 @media (min-width: 768px) {
   .game-main-row { grid-template-columns: 460px 1fr; }
 }
@@ -513,12 +516,14 @@ input:focus, textarea:focus, select:focus {
 }
 .stat-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.6rem;
   margin: 0.75rem 0 1rem;
 }
 .stat-chip {
   display: flex;
+  flex: 1;
+  min-width: 0;
   align-items: center;
   gap: 0.5rem;
   background: var(--surface);
@@ -533,18 +538,23 @@ input:focus, textarea:focus, select:focus {
 .stat-chip-rating svg {
   color: #facc15;
 }
+.stat-chip > div {
+  min-width: 0;
+}
 .stat-chip .stat-value {
   display: block;
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--text);
   line-height: 1.2;
+  overflow-wrap: break-word;
 }
 .stat-chip .stat-label {
   display: block;
   font-size: 0.7rem;
   color: var(--text-dimmer);
   line-height: 1.2;
+  overflow-wrap: break-word;
 }
 .detail-columns {
   display: grid;

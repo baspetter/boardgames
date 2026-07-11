@@ -54,7 +54,7 @@ require __DIR__ . '/includes/header.php';
   </div>
 
   <div>
-    <h1 style="margin-top:0;"><?= h($game['name']) ?></h1>
+    <h1 style="margin:0;"><?= h($game['name']) ?></h1>
     <?php if ($game['tagline']): ?>
       <p class="game-tagline"><?= h($game['tagline']) ?></p>
     <?php endif; ?>
