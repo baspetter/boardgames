@@ -134,7 +134,11 @@ require __DIR__ . '/includes/header.php';
         <p class="section-label">Designers</p>
         <ul style="padding-left:1.1rem;margin:0;">
           <?php foreach ($designers as $d): ?>
-            <li><a href="<?= h(bgg_designer_url($d['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($d['name']) ?></a></li>
+            <?php if (!empty($d['bggId'])): ?>
+              <li><a href="<?= h(bgg_designer_url($d['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($d['name']) ?></a></li>
+            <?php else: ?>
+              <li><?= h($d['name']) ?></li>
+            <?php endif; ?>
           <?php endforeach; ?>
         </ul>
       </div>
@@ -144,7 +148,11 @@ require __DIR__ . '/includes/header.php';
         <p class="section-label">Artists</p>
         <ul style="padding-left:1.1rem;margin:0;">
           <?php foreach ($artists as $a): ?>
-            <li><a href="<?= h(bgg_artist_url($a['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($a['name']) ?></a></li>
+            <?php if (!empty($a['bggId'])): ?>
+              <li><a href="<?= h(bgg_artist_url($a['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($a['name']) ?></a></li>
+            <?php else: ?>
+              <li><?= h($a['name']) ?></li>
+            <?php endif; ?>
           <?php endforeach; ?>
         </ul>
       </div>

@@ -54,6 +54,10 @@
           </select>
           <p class="hint" style="margin-top:0.25rem;">Game type — Ctrl/Cmd-click to select multiple.</p>
         </div>
+        <div class="field-row">
+          <div><label class="field-label">Designers</label><input type="text" name="designers" placeholder="Comma-separated names"></div>
+          <div><label class="field-label">Illustrators</label><input type="text" name="artists" placeholder="Comma-separated names"></div>
+        </div>
         <input type="url" name="howToPlayUrl" placeholder="How to play video link (YouTube, etc.)">
         <p id="manual-error" class="error hidden"></p>
         <button type="submit" class="btn btn-accent">Add game</button>

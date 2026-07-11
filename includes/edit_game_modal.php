@@ -38,6 +38,10 @@ require_once __DIR__ . '/game-types.php';
         </select>
         <p class="hint" style="margin-top:0.25rem;">Game type — Ctrl/Cmd-click to select multiple. Leave nothing selected to keep existing categories/tags.</p>
       </div>
+      <div class="field-row">
+        <div><label class="field-label">Designers</label><input type="text" name="designers" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['designers']), 'name'))) ?>"></div>
+        <div><label class="field-label">Illustrators</label><input type="text" name="artists" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['artists']), 'name'))) ?>"></div>
+      </div>
       <input type="url" name="howToPlayUrl" placeholder="How to play video link" value="<?= h($game['how_to_play_url'] ?? '') ?>">
       <p id="edit-error" class="error hidden"></p>
       <button type="submit" class="btn btn-accent">Save</button>

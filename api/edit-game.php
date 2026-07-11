@@ -29,6 +29,8 @@ try {
         'playingTime' => $toIntOrNull($data['playingTime'] ?? null),
         'weight' => $toFloatOrNull($data['weight'] ?? null),
         'gameType' => $data['gameType'] ?? null,
+        'designers' => $data['designers'] ?? null,
+        'artists' => $data['artists'] ?? null,
         'howToPlayUrl' => $data['howToPlayUrl'] ?? null,
     ]);
     json_response(['ok' => true]);

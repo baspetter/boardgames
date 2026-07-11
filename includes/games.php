@@ -95,7 +95,14 @@ function upsert_bgg_game(?int $gameId, array $details): array
     return find_game($gameId);
 }
 
-/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?string,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
+/** Parses a comma-separated names string (e.g. "Klaus Teuber, Uwe Rosenberg") into [{"name":...}, ...]. */
+function parse_names_list(string $raw): array
+{
+    $names = array_filter(array_map('trim', explode(',', $raw)), fn($n) => $n !== '');
+    return array_values(array_map(fn($n) => ['name' => $n], $names));
+}
+
+/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?string,playingTime?:?int,weight?:?float,gameType?:?string[],designers?:?string,artists?:?string,howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
     if (!empty($input['imageUploadPath'])) {
@@ -107,11 +114,13 @@ function create_manual_game(array $input): int
     }
 
     $categories = !empty($input['gameType']) ? array_values((array) $input['gameType']) : [];
+    $designers = !empty($input['designers']) ? parse_names_list($input['designers']) : [];
+    $artists = !empty($input['artists']) ? parse_names_list($input['artists']) : [];
 
     $stmt = db()->prepare(
         'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description, tagline,
-            min_players, max_players, best_players, playing_time, weight, categories, how_to_play_url)
-         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            min_players, max_players, best_players, playing_time, weight, categories, designers, artists, how_to_play_url)
+         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         $input['name'],
@@ -126,6 +135,8 @@ function create_manual_game(array $input): int
         $input['playingTime'] ?? null,
         $input['weight'] ?? null,
         json_encode($categories),
+        json_encode($designers),
+        json_encode($artists),
         $input['howToPlayUrl'] ?? null,
     ]);
 
@@ -160,6 +171,16 @@ function update_game(int $gameId, array $input): void
     if (!empty($input['gameType'])) {
         $set[] = 'categories = ?';
         $params[] = json_encode(array_values((array) $input['gameType']));
+    }
+
+    if (array_key_exists('designers', $input) && $input['designers'] !== null) {
+        $set[] = 'designers = ?';
+        $params[] = json_encode(parse_names_list($input['designers']));
+    }
+
+    if (array_key_exists('artists', $input) && $input['artists'] !== null) {
+        $set[] = 'artists = ?';
+        $params[] = json_encode(parse_names_list($input['artists']));
     }
 
     if (!empty($input['imageUploadPath'])) {
