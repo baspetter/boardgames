@@ -49,20 +49,23 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
     echo '</div>';
 }
 
-/** Compact list (thumbnail + name) of games, for a narrow "similar games" column. */
-function render_similar_list(array $games): void
+/** "Similar games" cards: cover + title + one-line tagline, in a responsive grid. */
+function render_similar_game_cards(array $games): void
 {
-    echo '<ul class="similar-list">';
+    echo '<div class="similar-cards">';
     foreach ($games as $g) {
         $cover = $g['thumbnail'] ?: $g['image'];
-        echo '<li><a href="/game.php?id=' . (int) $g['id'] . '">';
+        echo '<a class="similar-card" href="/game.php?id=' . (int) $g['id'] . '">';
         if ($cover) {
             echo '<img src="' . h($cover) . '" alt="" loading="lazy">';
         } else {
             echo '<div class="no-image"></div>';
         }
-        echo '<span>' . h($g['name']) . '</span>';
-        echo '</a></li>';
+        echo '<div class="similar-card-text"><p class="similar-card-title">' . h($g['name']) . '</p>';
+        if (!empty($g['tagline'])) {
+            echo '<p class="similar-card-tagline">' . h($g['tagline']) . '</p>';
+        }
+        echo '</div></a>';
     }
-    echo '</ul>';
+    echo '</div>';
 }

@@ -21,6 +21,7 @@ try {
         'image' => $data['image'] ?? null,
         'imageUploadPath' => uploaded_image_tmp_path('imageFile'),
         'description' => $data['description'] ?? null,
+        'tagline' => $toStringOrNull($data['tagline'] ?? null),
         'yearPublished' => $toIntOrNull($data['yearPublished'] ?? null),
         'minPlayers' => $toIntOrNull($data['minPlayers'] ?? null),
         'maxPlayers' => $toIntOrNull($data['maxPlayers'] ?? null),

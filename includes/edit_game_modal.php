@@ -12,6 +12,7 @@ require_once __DIR__ . '/game-types.php';
     <form id="edit-game-form" class="form-stack" enctype="multipart/form-data">
       <input type="hidden" name="gameId" value="<?= (int) $game['id'] ?>">
       <input type="text" name="name" placeholder="Title *" value="<?= h($game['name']) ?>" required>
+      <input type="text" name="tagline" placeholder="One-line tagline (optional)" maxlength="200" value="<?= h($game['tagline'] ?? '') ?>">
       <input type="url" name="image" placeholder="Cover art URL (leave empty to keep current)">
       <div class="divider"><hr>or<hr></div>
       <div>

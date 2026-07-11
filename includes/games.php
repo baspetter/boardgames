@@ -95,7 +95,7 @@ function upsert_bgg_game(?int $gameId, array $details): array
     return find_game($gameId);
 }
 
-/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?string,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
+/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,bestPlayers?:?string,playingTime?:?int,weight?:?float,gameType?:?string[],howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
     if (!empty($input['imageUploadPath'])) {
@@ -109,9 +109,9 @@ function create_manual_game(array $input): int
     $categories = !empty($input['gameType']) ? array_values((array) $input['gameType']) : [];
 
     $stmt = db()->prepare(
-        'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description,
+        'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description, tagline,
             min_players, max_players, best_players, playing_time, weight, categories, how_to_play_url)
-         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         $input['name'],
@@ -119,6 +119,7 @@ function create_manual_game(array $input): int
         $images['image'],
         $images['thumbnail'],
         $input['description'] ?? null,
+        $input['tagline'] ?? null,
         $input['minPlayers'] ?? null,
         $input['maxPlayers'] ?? null,
         $input['bestPlayers'] ?? null,
@@ -137,6 +138,7 @@ function update_game(int $gameId, array $input): void
     $columnMap = [
         'name' => 'name',
         'description' => 'description',
+        'tagline' => 'tagline',
         'yearPublished' => 'year_published',
         'minPlayers' => 'min_players',
         'maxPlayers' => 'max_players',

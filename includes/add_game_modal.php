@@ -28,6 +28,7 @@
     <div id="tab-manual" class="tab-panel hidden">
       <form id="manual-game-form" class="form-stack" enctype="multipart/form-data">
         <input type="text" name="name" placeholder="Title *" required>
+        <input type="text" name="tagline" placeholder="One-line tagline (optional)" maxlength="200">
         <input type="url" name="image" placeholder="Cover art URL">
         <div class="divider"><hr>or<hr></div>
         <div>

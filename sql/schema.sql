@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS games (
   image           VARCHAR(255) NULL,      -- local optimized "detail" image path
   thumbnail       VARCHAR(255) NULL,      -- local optimized "grid" thumbnail path
   description     TEXT NULL,
+  tagline         VARCHAR(200) NULL,     -- short one-line blurb, set by the user (not auto-filled from BGG)
   min_players     SMALLINT NULL,
   max_players     SMALLINT NULL,
   best_players    VARCHAR(20) NULL,      -- e.g. "3" or "2-4" (a range of tied "Best" counts)
