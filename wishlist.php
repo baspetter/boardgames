@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/partials.php';
+require_once __DIR__ . '/includes/bgg.php';
 
 $userId = require_login();
 
@@ -20,13 +21,21 @@ $stmt = db()->prepare(
 $stmt->execute([$userId]);
 $games = $stmt->fetchAll();
 
+$hotList = [];
+$hotError = null;
+try {
+    $hotList = bgg_get_hot_list_cached();
+} catch (Throwable $e) {
+    $hotError = $e->getMessage();
+}
+
 $addTarget = 'wishlist';
-$pageTitle = 'Wishlist - ' . SITE_NAME;
+$pageTitle = 'My wishlist - ' . SITE_NAME;
 $activeNav = 'wishlist';
 require __DIR__ . '/includes/header.php';
 ?>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;">
-  <h1 style="margin:0;">Wishlist</h1>
+  <h1 style="margin:0;">My wishlist</h1>
   <div style="display:flex;align-items:center;gap:0.75rem;">
     <?php if ($games): ?>
       <form method="get" id="sort-form">
@@ -42,6 +51,20 @@ require __DIR__ . '/includes/header.php';
 </div>
 
 <?php render_game_grid($games, "Your wishlist is empty. Click 'Add to wishlist' for games you'd like to get."); ?>
+
+<h2 style="margin-top:2.5rem;">Recommendations</h2>
+<p class="hint" style="margin:0 0 1rem;">BoardGameGeek's trending "Hot Games" list, updated daily.</p>
+<?php if ($hotError): ?>
+  <p class="error"><?= h($hotError) ?></p>
+<?php elseif (empty($hotList)): ?>
+  <p class="empty-state">No recommendations found right now.</p>
+<?php else: ?>
+  <div class="game-grid">
+    <?php foreach (array_slice($hotList, 0, 12) as $item): ?>
+      <?php render_hot_game_card($item); ?>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>
 
 <?php require __DIR__ . '/includes/add_game_modal.php'; ?>
 <?php require __DIR__ . '/includes/footer.php'; ?>

@@ -7,11 +7,10 @@
     </div>
     <?php if ($loggedIn): ?>
       <nav class="site-footer-links">
-        <a href="/">Collection</a>
-        <a href="/wishlist.php">Wishlist</a>
-        <a href="/discover.php">Discover</a>
-        <a href="/playgroups.php">Playgroups</a>
-        <a href="/gamenights.php">Gamenights</a>
+        <a href="/">My collection</a>
+        <a href="/wishlist.php">My wishlist</a>
+        <a href="/playgroups.php">Our playgroup</a>
+        <a href="/gamenights.php">Our gamenights</a>
       </nav>
     <?php endif; ?>
   </div>

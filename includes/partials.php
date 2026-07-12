@@ -58,7 +58,7 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
 }
 
 /**
- * A "Discover" grid card for a BGG hot-list item — not necessarily cached
+ * A recommendation card for a BGG hot-list item — not necessarily cached
  * locally yet, so it links through view-bgg.php instead of a local game id.
  * @param array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string} $item
  */

@@ -27,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $groups = get_user_playgroups($userId);
-$pageTitle = 'Playgroups - ' . SITE_NAME;
+$pageTitle = 'Our playgroup - ' . SITE_NAME;
 $activeNav = 'playgroups';
 require __DIR__ . '/includes/header.php';
 ?>
-<h1>Playgroups</h1>
+<h1>Our playgroup</h1>
 
 <div class="form-card" style="margin-left:0;">
   <h2 style="margin-top:0;">Create new group</h2>

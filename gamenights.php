@@ -16,11 +16,11 @@ foreach ($groups as $g) {
     ];
 }
 
-$pageTitle = 'Gamenights - ' . SITE_NAME;
+$pageTitle = 'Our gamenights - ' . SITE_NAME;
 $activeNav = 'gamenights';
 require __DIR__ . '/includes/header.php';
 ?>
-<h1>Gamenights</h1>
+<h1>Our gamenights</h1>
 
 <?php if (!$groupsData): ?>
   <p class="hint">You're not a member of a playgroup yet.</p>
