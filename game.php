@@ -21,6 +21,7 @@ $categories = json_col($game['categories']);
 $mechanics = json_col($game['mechanics']);
 $designers = json_col($game['designers']);
 $artists = json_col($game['artists']);
+$publishers = json_col($game['publishers']);
 
 $similarTags = array_merge($categories, $mechanics);
 $similarOwn = get_similar_games_in_collection($userId, $gameId, $similarTags);
@@ -100,23 +101,15 @@ require __DIR__ . '/includes/header.php';
         </div>
       <?php endif; ?>
       <?php if ($game['bgg_rating']): ?>
-        <div class="stat-chip stat-chip-rating">
+        <div class="stat-chip">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           <div><span class="stat-value"><?= h(number_format((float) $game['bgg_rating'], 1)) ?></span><span class="stat-label">BGG rating</span></div>
         </div>
       <?php endif; ?>
     </div>
 
-    <?php if ($categories || $mechanics): ?>
-      <div class="tag-chips">
-        <?php foreach ([...$categories, ...$mechanics] as $tag): ?>
-          <div class="tag-chip">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.5 12.5V2.5h10L20.59 10.6a2 2 0 0 1 0 2.82Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>
-            <?= h($tag) ?>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
+    <?php render_tag_chips('Categories', $categories); ?>
+    <?php render_tag_chips('Mechanics', $mechanics); ?>
 
     <?php if ($game['description']): ?>
       <p class="game-description"><?= h($game['description']) ?></p>
@@ -133,7 +126,7 @@ require __DIR__ . '/includes/header.php';
   </div>
 </div>
 
-<?php if ($designers || $artists): ?>
+<?php if ($designers || $artists || $publishers): ?>
   <div class="detail-columns">
     <?php if ($designers): ?>
       <div>
@@ -158,6 +151,20 @@ require __DIR__ . '/includes/header.php';
               <li><a href="<?= h(bgg_artist_url($a['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($a['name']) ?></a></li>
             <?php else: ?>
               <li><?= h($a['name']) ?></li>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
+    <?php if ($publishers): ?>
+      <div>
+        <p class="section-label">Publishers</p>
+        <ul style="padding-left:1.1rem;margin:0;">
+          <?php foreach ($publishers as $p): ?>
+            <?php if (!empty($p['bggId'])): ?>
+              <li><a href="<?= h(bgg_publisher_url($p['bggId'])) ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($p['name']) ?></a></li>
+            <?php else: ?>
+              <li><?= h($p['name']) ?></li>
             <?php endif; ?>
           <?php endforeach; ?>
         </ul>

@@ -94,3 +94,8 @@ function bgg_artist_url(int $id): string
 {
     return 'https://boardgamegeek.com/boardgameartist/' . $id;
 }
+
+function bgg_publisher_url(int $id): string
+{
+    return 'https://boardgamegeek.com/boardgamepublisher/' . $id;
+}

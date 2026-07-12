@@ -51,9 +51,10 @@ sort($primaryCategoryOptions, SORT_NATURAL | SORT_FLAG_CASE);
         </select>
         <p class="hint" style="margin-top:0.25rem;">Shown when you hover over this game in your collection.</p>
       </div>
-      <div class="field-row">
+      <div class="field-row field-row-3">
         <div><label class="field-label">Designers</label><input type="text" name="designers" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['designers']), 'name'))) ?>"></div>
         <div><label class="field-label">Illustrators</label><input type="text" name="artists" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['artists']), 'name'))) ?>"></div>
+        <div><label class="field-label">Publishers</label><input type="text" name="publishers" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['publishers']), 'name'))) ?>"></div>
       </div>
       <input type="url" name="howToPlayUrl" placeholder="How to play video link" value="<?= h($game['how_to_play_url'] ?? '') ?>">
       <p id="edit-error" class="error hidden"></p>

@@ -162,6 +162,7 @@ function bgg_get_thing(int $bggId): array
     $mechanics = [];
     $designers = [];
     $artists = [];
+    $publishers = [];
     foreach ($item->link as $link) {
         $type = (string) $link['type'];
         $value = (string) $link['value'];
@@ -174,6 +175,8 @@ function bgg_get_thing(int $bggId): array
             $designers[] = ['bggId' => $id, 'name' => $value];
         } elseif ($type === 'boardgameartist') {
             $artists[] = ['bggId' => $id, 'name' => $value];
+        } elseif ($type === 'boardgamepublisher') {
+            $publishers[] = ['bggId' => $id, 'name' => $value];
         }
     }
 
@@ -212,6 +215,7 @@ function bgg_get_thing(int $bggId): array
         'mechanics' => $mechanics,
         'designers' => $designers,
         'artists' => $artists,
+        'publishers' => $publishers,
     ];
 }
 

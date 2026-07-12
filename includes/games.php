@@ -91,6 +91,7 @@ function upsert_bgg_game(?int $gameId, array $details): array
         'mechanics' => json_encode($details['mechanics']),
         'designers' => json_encode($details['designers']),
         'artists' => json_encode($details['artists']),
+        'publishers' => json_encode($details['publishers']),
         'cached_at' => date('Y-m-d H:i:s'),
     ];
 
@@ -137,14 +138,15 @@ function create_manual_game(array $input): int
     $categories = !empty($input['gameType']) ? array_values((array) $input['gameType']) : [];
     $designers = !empty($input['designers']) ? parse_names_list($input['designers']) : [];
     $artists = !empty($input['artists']) ? parse_names_list($input['artists']) : [];
+    $publishers = !empty($input['publishers']) ? parse_names_list($input['publishers']) : [];
     $primaryCategory = (!empty($input['primaryCategory']) && in_array($input['primaryCategory'], $categories, true))
         ? $input['primaryCategory']
         : null;
 
     $stmt = db()->prepare(
         'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description, tagline,
-            min_players, max_players, playing_time, weight, bgg_rating, categories, primary_category, designers, artists, how_to_play_url)
-         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            min_players, max_players, playing_time, weight, bgg_rating, categories, primary_category, designers, artists, publishers, how_to_play_url)
+         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         $input['name'],
@@ -162,6 +164,7 @@ function create_manual_game(array $input): int
         $primaryCategory,
         json_encode($designers),
         json_encode($artists),
+        json_encode($publishers),
         $input['howToPlayUrl'] ?? null,
     ]);
 
@@ -220,6 +223,11 @@ function update_game(int $gameId, array $input): void
     if (array_key_exists('artists', $input) && $input['artists'] !== null) {
         $set[] = 'artists = ?';
         $params[] = json_encode(parse_names_list($input['artists']));
+    }
+
+    if (array_key_exists('publishers', $input) && $input['publishers'] !== null) {
+        $set[] = 'publishers = ?';
+        $params[] = json_encode(parse_names_list($input['publishers']));
     }
 
     if (!empty($input['imageUploadPath'])) {

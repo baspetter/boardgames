@@ -57,6 +57,27 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
     echo '</div>';
 }
 
+/** A labeled row of tag chips (categories/mechanics), collapsed behind a "+N more" toggle past $visibleLimit. */
+function render_tag_chips(string $label, array $tags, int $visibleLimit = 6): void
+{
+    if (empty($tags)) {
+        return;
+    }
+    $icon = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2.5 12.5V2.5h10L20.59 10.6a2 2 0 0 1 0 2.82Z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>';
+    $extraCount = max(0, count($tags) - $visibleLimit);
+
+    echo '<p class="section-label" style="margin-top:0.75rem;">' . h($label) . '</p>';
+    echo '<div class="tag-chips">';
+    foreach ($tags as $i => $tag) {
+        $class = $i >= $visibleLimit ? 'tag-chip tag-chip-extra hidden' : 'tag-chip';
+        echo '<div class="' . $class . '">' . $icon . h($tag) . '</div>';
+    }
+    if ($extraCount > 0) {
+        echo '<button type="button" class="tag-chip tag-chip-toggle">+' . $extraCount . ' more</button>';
+    }
+    echo '</div>';
+}
+
 /** "Similar games" cards: cover + title + one-line tagline, in a responsive grid. */
 function render_similar_game_cards(array $games): void
 {

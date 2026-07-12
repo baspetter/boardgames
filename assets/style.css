@@ -475,6 +475,15 @@ input:focus, textarea:focus, select:focus {
   color: var(--accent);
   flex-shrink: 0;
 }
+.tag-chip-toggle {
+  font: inherit;
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 600;
+}
+.tag-chip-toggle:hover {
+  background: var(--surface-hover);
+}
 .similar-cards {
   display: grid;
   grid-template-columns: 1fr;
@@ -547,9 +556,6 @@ input:focus, textarea:focus, select:focus {
 .stat-chip svg {
   color: var(--accent);
   flex-shrink: 0;
-}
-.stat-chip-rating svg {
-  color: #facc15;
 }
 .stat-chip > div {
   min-width: 0;

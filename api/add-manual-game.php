@@ -32,6 +32,7 @@ try {
         'primaryCategory' => $toStringOrNull($data['primaryCategory'] ?? null),
         'designers' => $data['designers'] ?? null,
         'artists' => $data['artists'] ?? null,
+        'publishers' => $data['publishers'] ?? null,
         'howToPlayUrl' => $data['howToPlayUrl'] ?? null,
     ]);
 

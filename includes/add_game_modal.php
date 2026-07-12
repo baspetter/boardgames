@@ -64,9 +64,10 @@
           </select>
           <p class="hint" style="margin-top:0.25rem;">Shown when you hover over this game in your collection.</p>
         </div>
-        <div class="field-row">
+        <div class="field-row field-row-3">
           <div><label class="field-label">Designers</label><input type="text" name="designers" placeholder="Comma-separated names"></div>
           <div><label class="field-label">Illustrators</label><input type="text" name="artists" placeholder="Comma-separated names"></div>
+          <div><label class="field-label">Publishers</label><input type="text" name="publishers" placeholder="Comma-separated names"></div>
         </div>
         <input type="url" name="howToPlayUrl" placeholder="How to play video link (YouTube, etc.)">
         <p id="manual-error" class="error hidden"></p>

@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS games (
   mechanics       JSON NULL,              -- ["Dice Rolling", ...]
   designers       JSON NULL,              -- [{"bggId":26,"name":"Klaus Teuber"}, ...]
   artists         JSON NULL,
+  publishers      JSON NULL,
   how_to_play_url VARCHAR(500) NULL,
   cached_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

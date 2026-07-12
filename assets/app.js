@@ -187,6 +187,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Expand/collapse "+N more" tag chips (categories/mechanics)
+  document.querySelectorAll('.tag-chip-toggle').forEach((btn) => {
+    const collapsedText = btn.textContent;
+    btn.addEventListener('click', () => {
+      const extraChips = btn.closest('.tag-chips').querySelectorAll('.tag-chip-extra');
+      const isCollapsed = extraChips.length > 0 && extraChips[0].classList.contains('hidden');
+      extraChips.forEach((chip) => chip.classList.toggle('hidden', !isCollapsed));
+      btn.textContent = isCollapsed ? 'Show less' : collapsedText;
+    });
+  });
+
   // Collection sort order: submit on change so picking an option applies immediately.
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) {
