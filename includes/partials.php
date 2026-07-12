@@ -7,6 +7,8 @@ function render_game_card(array $game, array $owners = []): void
     $cover = $game['thumbnail'] ?: $game['image'];
     $rating = $game['bgg_rating'] ?? null;
     $ownerNames = $owners ? implode(', ', array_map(fn($o) => $o['username'], $owners)) : '';
+    $categories = json_col($game['categories'] ?? null);
+    $primaryCategory = $categories[0] ?? null;
     ?>
     <a class="game-card" href="/game.php?id=<?= (int) $game['id'] ?>">
       <?php if ($cover): ?>
@@ -18,6 +20,9 @@ function render_game_card(array $game, array $owners = []): void
         <span class="rating-badge"><?= h(number_format((float) $rating, 1)) ?></span>
       <?php endif; ?>
       <div class="card-overlay">
+        <?php if ($primaryCategory): ?>
+          <span class="card-category-badge"><?= h($primaryCategory) ?></span>
+        <?php endif; ?>
         <p class="card-title"><?= h($game['name']) ?></p>
         <?php if ($game['year_published'] || $ownerNames): ?>
           <p class="card-sub"><?= h(trim(($game['year_published'] ?? '') . ($ownerNames ? ' · ' . $ownerNames : ''))) ?></p>

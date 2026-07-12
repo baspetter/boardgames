@@ -27,6 +27,7 @@ try {
         'maxPlayers' => $toIntOrNull($data['maxPlayers'] ?? null),
         'playingTime' => $toIntOrNull($data['playingTime'] ?? null),
         'weight' => $toFloatOrNull($data['weight'] ?? null),
+        'bggRating' => $toFloatOrNull($data['bggRating'] ?? null),
         'gameType' => $data['gameType'] ?? null,
         'designers' => $data['designers'] ?? null,
         'artists' => $data['artists'] ?? null,

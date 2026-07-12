@@ -101,7 +101,7 @@ function parse_names_list(string $raw): array
     return array_values(array_map(fn($n) => ['name' => $n], $names));
 }
 
-/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,playingTime?:?int,weight?:?float,gameType?:?string[],designers?:?string,artists?:?string,howToPlayUrl?:?string} $input */
+/** @param array{name:string,image?:?string,imageUploadPath?:?string,description?:?string,tagline?:?string,yearPublished?:?int,minPlayers?:?int,maxPlayers?:?int,playingTime?:?int,weight?:?float,bggRating?:?float,gameType?:?string[],designers?:?string,artists?:?string,howToPlayUrl?:?string} $input */
 function create_manual_game(array $input): int
 {
     if (!empty($input['imageUploadPath'])) {
@@ -118,8 +118,8 @@ function create_manual_game(array $input): int
 
     $stmt = db()->prepare(
         'INSERT INTO games (is_manual, name, year_published, image, thumbnail, description, tagline,
-            min_players, max_players, playing_time, weight, categories, designers, artists, how_to_play_url)
-         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            min_players, max_players, playing_time, weight, bgg_rating, categories, designers, artists, how_to_play_url)
+         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $stmt->execute([
         $input['name'],
@@ -132,6 +132,7 @@ function create_manual_game(array $input): int
         $input['maxPlayers'] ?? null,
         $input['playingTime'] ?? null,
         $input['weight'] ?? null,
+        $input['bggRating'] ?? null,
         json_encode($categories),
         json_encode($designers),
         json_encode($artists),
@@ -153,6 +154,7 @@ function update_game(int $gameId, array $input): void
         'maxPlayers' => 'max_players',
         'playingTime' => 'playing_time',
         'weight' => 'weight',
+        'bggRating' => 'bgg_rating',
         'howToPlayUrl' => 'how_to_play_url',
     ];
 

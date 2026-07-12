@@ -25,9 +25,10 @@ require_once __DIR__ . '/game-types.php';
         <div><label class="field-label">Min. players</label><input type="number" name="minPlayers" placeholder="Min. players" min="1" value="<?= h((string) ($game['min_players'] ?? '')) ?>"></div>
         <div><label class="field-label">Max. players</label><input type="number" name="maxPlayers" placeholder="Max. players" min="1" value="<?= h((string) ($game['max_players'] ?? '')) ?>"></div>
       </div>
-      <div class="field-row">
+      <div class="field-row field-row-3">
         <div><label class="field-label">Time (min)</label><input type="number" name="playingTime" placeholder="Time (min)" min="1" value="<?= h((string) ($game['playing_time'] ?? '')) ?>"></div>
         <div><label class="field-label">Weight (1-5)</label><input type="text" name="weight" placeholder="Weight (1-5)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" value="<?= h((string) ($game['weight'] ?? '')) ?>"></div>
+        <div><label class="field-label">BGG rating (0-10)</label><input type="text" name="bggRating" placeholder="BGG rating (0-10)" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" value="<?= h((string) ($game['bgg_rating'] ?? '')) ?>"></div>
       </div>
       <div>
         <select name="gameType[]" multiple size="5">
