@@ -175,6 +175,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Link an existing (manually-added) game to a BGG entry
+  const linkBggForm = document.getElementById('link-bgg-form');
+  if (linkBggForm) {
+    linkBggForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('link-bgg-input');
+      postJson('/api/link-bgg.php', { gameId: linkBggForm.dataset.gameId, link: input.value })
+        .then(() => window.location.reload())
+        .catch((err) => showError('link-bgg-error', err.message));
+    });
+  }
+
   // Collection sort order: submit on change so picking an option applies immediately.
   const sortSelect = document.getElementById('sort-select');
   if (sortSelect) {

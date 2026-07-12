@@ -48,11 +48,31 @@ function refresh_game_from_bgg(int $gameId): array
     return upsert_bgg_game($gameId, $details);
 }
 
+/** Links an existing (typically manually-added) game to a BGG entry, filling in its data. */
+function link_game_to_bgg(int $gameId, int $bggId): array
+{
+    $game = find_game($gameId);
+    if (!$game) {
+        throw new Exception('Game not found.');
+    }
+    if ($game['bgg_id'] !== null) {
+        throw new Exception('This game is already linked to BoardGameGeek.');
+    }
+    $existing = find_game_by_bgg_id($bggId);
+    if ($existing) {
+        throw new Exception('That BoardGameGeek game is already in the system as "' . $existing['name'] . '".');
+    }
+    $details = bgg_get_thing($bggId);
+    return upsert_bgg_game($gameId, $details);
+}
+
 function upsert_bgg_game(?int $gameId, array $details): array
 {
     $images = $details['image'] ? optimize_and_store_image($details['image'], $gameId ?? 0) : ['image' => null, 'thumbnail' => null];
 
     $fields = [
+        'bgg_id' => $details['bggId'],
+        'is_manual' => 0,
         'name' => $details['name'],
         'year_published' => $details['yearPublished'],
         'image' => $images['image'],
@@ -82,7 +102,6 @@ function upsert_bgg_game(?int $gameId, array $details): array
     } else {
         // Only set the tagline on first import — never overwrite a user's own
         // edit to it on a later "Update with BGG" refresh.
-        $fields['bgg_id'] = $details['bggId'];
         $fields['tagline'] = $details['tagline'] ?? null;
         $cols = implode(', ', array_keys($fields));
         $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($fields)));

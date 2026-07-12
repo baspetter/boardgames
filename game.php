@@ -49,6 +49,12 @@ require __DIR__ . '/includes/header.php';
       <?php if ($game['bgg_id']): ?>
         <button type="button" class="btn btn-secondary" data-action="refresh-bgg" data-game-id="<?= $gameId ?>">&#8635; Update with BGG</button>
         <a class="btn" style="color:var(--text-dimmer);text-align:center;" href="https://boardgamegeek.com/boardgame/<?= (int) $game['bgg_id'] ?>" target="_blank" rel="noreferrer">View on BoardGameGeek</a>
+      <?php else: ?>
+        <form id="link-bgg-form" data-game-id="<?= $gameId ?>" style="display:flex;gap:0.5rem;">
+          <input type="text" id="link-bgg-input" placeholder="Paste a BoardGameGeek link or ID...">
+          <button type="submit" class="btn btn-secondary">Link to BGG</button>
+        </form>
+        <p id="link-bgg-error" class="error hidden"></p>
       <?php endif; ?>
     </div>
   </div>
