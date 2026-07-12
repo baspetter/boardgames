@@ -187,6 +187,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Quick-add an expansion (from the base game's "Expansions" list) to the collection
+  document.querySelectorAll('.expansion-add-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      postJson('/api/add-game.php', { bggId: btn.dataset.bggId })
+        .then(() => window.location.reload())
+        .catch((err) => {
+          alert(err.message);
+          btn.disabled = false;
+        });
+    });
+  });
+
   // Expand/collapse "+N more" tag chips (categories/mechanics)
   document.querySelectorAll('.tag-chip-toggle').forEach((btn) => {
     const collapsedText = btn.textContent;

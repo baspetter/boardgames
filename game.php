@@ -22,6 +22,9 @@ $mechanics = json_col($game['mechanics']);
 $designers = json_col($game['designers']);
 $artists = json_col($game['artists']);
 $publishers = json_col($game['publishers']);
+$expansions = resolve_expansion_links(json_col($game['expansions']), $userId);
+$expansionOfLink = json_col($game['expansion_of'] ?? null);
+$expansionOf = $expansionOfLink ? resolve_expansion_links([$expansionOfLink], $userId)[0] : null;
 
 $similarTags = array_merge($categories, $mechanics);
 $similarOwn = get_similar_games_in_collection($userId, $gameId, $similarTags);
@@ -62,6 +65,16 @@ require __DIR__ . '/includes/header.php';
 
   <div>
     <h1 style="margin:0;"><?= h($game['name']) ?></h1>
+    <?php if ($expansionOf): ?>
+      <p class="hint" style="margin:0.2rem 0 0;">
+        Expansion of
+        <?php if ($expansionOf['localGameId']): ?>
+          <a href="/game.php?id=<?= (int) $expansionOf['localGameId'] ?>" style="color:var(--accent);"><?= h($expansionOf['name']) ?></a>
+        <?php else: ?>
+          <a href="https://boardgamegeek.com/boardgame/<?= (int) $expansionOf['bggId'] ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($expansionOf['name']) ?></a>
+        <?php endif; ?>
+      </p>
+    <?php endif; ?>
     <?php if ($game['tagline']): ?>
       <p class="game-tagline"><?= h($game['tagline']) ?></p>
     <?php endif; ?>
@@ -171,6 +184,24 @@ require __DIR__ . '/includes/header.php';
       </div>
     <?php endif; ?>
   </div>
+<?php endif; ?>
+
+<?php if ($expansions): ?>
+  <h2 style="margin-top:2.5rem;">Expansions</h2>
+  <ul class="expansions-list">
+    <?php foreach ($expansions as $exp): ?>
+      <li class="expansions-list-item">
+        <?php if ($exp['localGameId']): ?>
+          <a href="/game.php?id=<?= (int) $exp['localGameId'] ?>"><?= h($exp['name']) ?></a>
+        <?php else: ?>
+          <a href="https://boardgamegeek.com/boardgame/<?= (int) $exp['bggId'] ?>" target="_blank" rel="noreferrer"><?= h($exp['name']) ?></a>
+        <?php endif; ?>
+        <?php if (!$exp['owned']): ?>
+          <button type="button" class="expansion-add-btn" data-bgg-id="<?= (int) $exp['bggId'] ?>">+ Add</button>
+        <?php endif; ?>
+      </li>
+    <?php endforeach; ?>
+  </ul>
 <?php endif; ?>
 
 <?php if ($similarOwn): ?>

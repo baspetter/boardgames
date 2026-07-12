@@ -605,6 +605,43 @@ input:focus, textarea:focus, select:focus {
 @media (min-width: 640px) {
   .detail-columns { grid-template-columns: 1fr 1fr; }
 }
+.expansions-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.expansions-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.85rem;
+}
+.expansions-list-item a {
+  color: var(--text);
+}
+.expansion-add-btn {
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+}
+.expansion-add-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
 .section-label {
   text-transform: uppercase;
   letter-spacing: 0.05em;

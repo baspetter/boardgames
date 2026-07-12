@@ -163,6 +163,8 @@ function bgg_get_thing(int $bggId): array
     $designers = [];
     $artists = [];
     $publishers = [];
+    $expansions = [];
+    $expansionOf = null;
     foreach ($item->link as $link) {
         $type = (string) $link['type'];
         $value = (string) $link['value'];
@@ -177,6 +179,14 @@ function bgg_get_thing(int $bggId): array
             $artists[] = ['bggId' => $id, 'name' => $value];
         } elseif ($type === 'boardgamepublisher') {
             $publishers[] = ['bggId' => $id, 'name' => $value];
+        } elseif ($type === 'boardgameexpansion') {
+            // "inbound" marks the reverse direction: this item IS the
+            // expansion, and the link points back to its base game.
+            if ((string) $link['inbound'] === 'true') {
+                $expansionOf = ['bggId' => $id, 'name' => $value];
+            } else {
+                $expansions[] = ['bggId' => $id, 'name' => $value];
+            }
         }
     }
 
@@ -216,6 +226,8 @@ function bgg_get_thing(int $bggId): array
         'designers' => $designers,
         'artists' => $artists,
         'publishers' => $publishers,
+        'expansions' => $expansions,
+        'expansionOf' => $expansionOf,
     ];
 }
 

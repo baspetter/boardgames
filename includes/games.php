@@ -22,6 +22,33 @@ function find_game(int $gameId): ?array
     return $game ?: null;
 }
 
+/**
+ * Augments a list of {bggId,name} link stubs (e.g. a game's expansions) with
+ * whether we already have that game cached locally, and whether $userId
+ * already owns it — so the UI can link internally and hide "+ Add" for it.
+ * @param array<int, array{bggId:int,name:string}> $links
+ */
+function resolve_expansion_links(array $links, int $userId): array
+{
+    $resolved = [];
+    foreach ($links as $link) {
+        $localGame = find_game_by_bgg_id((int) $link['bggId']);
+        $owned = false;
+        if ($localGame) {
+            $stmt = db()->prepare('SELECT 1 FROM collection_entries WHERE user_id = ? AND game_id = ?');
+            $stmt->execute([$userId, $localGame['id']]);
+            $owned = (bool) $stmt->fetchColumn();
+        }
+        $resolved[] = [
+            'bggId' => (int) $link['bggId'],
+            'name' => $link['name'],
+            'localGameId' => $localGame['id'] ?? null,
+            'owned' => $owned,
+        ];
+    }
+    return $resolved;
+}
+
 /** Fetches a game from cache, or from BGG (+ locally optimizes its image) if stale/missing. */
 function get_or_cache_game(int $bggId): array
 {
@@ -92,6 +119,8 @@ function upsert_bgg_game(?int $gameId, array $details): array
         'designers' => json_encode($details['designers']),
         'artists' => json_encode($details['artists']),
         'publishers' => json_encode($details['publishers']),
+        'expansions' => json_encode($details['expansions']),
+        'expansion_of' => $details['expansionOf'] !== null ? json_encode($details['expansionOf']) : null,
         'cached_at' => date('Y-m-d H:i:s'),
     ];
 
