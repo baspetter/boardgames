@@ -15,12 +15,9 @@
   </div>
   <div class="site-footer-inner site-footer-bottom">
     <p>&copy; <?= date('Y') ?> My Game Circle</p>
-    <div class="bgg-attribution">
-      <span>Game info and images via BoardGameGeek</span>
-      <a href="https://boardgamegeek.com" target="_blank" rel="noopener" class="bgg-badge" aria-label="Powered by BGG">
-        <img src="/assets/img/powered-by-bgg.png" alt="Powered by BGG">
-      </a>
-    </div>
+    <a href="https://boardgamegeek.com" target="_blank" rel="noopener" class="bgg-badge" aria-label="Powered by BGG">
+      <img src="/assets/img/powered-by-bgg.png" alt="Powered by BGG">
+    </a>
   </div>
 </footer>
 <script>window.CSRF_TOKEN = <?= json_encode(csrf_token()) ?>;</script>
