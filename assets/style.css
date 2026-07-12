@@ -777,3 +777,22 @@ input:focus, textarea:focus, select:focus {
 .site-footer-bottom a:hover {
   color: var(--text);
 }
+.bgg-attribution {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.bgg-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.45rem;
+  line-height: 0;
+  text-decoration: none;
+}
+.bgg-badge img {
+  display: block;
+  height: 18px;
+  width: auto;
+}
