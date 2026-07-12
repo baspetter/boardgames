@@ -205,6 +205,17 @@ a {
 .main-nav-btn.active:hover {
   background-color: var(--accent-hover);
 }
+@media (max-width: 639px) {
+  .main-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .main-nav-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 1.1rem 1.15rem;
+  }
+}
 
 /* Buttons & inputs */
 .btn {
