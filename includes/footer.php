@@ -8,6 +8,8 @@
     <?php if ($loggedIn): ?>
       <nav class="site-footer-links">
         <a href="/">Collection</a>
+        <a href="/wishlist.php">Wishlist</a>
+        <a href="/discover.php">Discover</a>
         <a href="/playgroups.php">Playgroups</a>
         <a href="/gamenights.php">Gamenights</a>
       </nav>

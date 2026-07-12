@@ -110,6 +110,59 @@ function bgg_search(string $query): array
     return $results;
 }
 
+/** BGG's "Hot Board Games" list (trending, updated daily by BGG). @return array<int, array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string}> */
+function bgg_get_hot_list(): array
+{
+    $url = BGG_BASE . '/hot?type=boardgame';
+    $xml = simplexml_load_string(bgg_fetch($url));
+    if ($xml === false) {
+        return [];
+    }
+
+    $results = [];
+    foreach ($xml->item as $item) {
+        $bggId = (int) $item['id'];
+        if ($bggId <= 0) {
+            continue;
+        }
+        $primary = null;
+        foreach ($item->name as $name) {
+            if ((string) $name['type'] === 'primary') {
+                $primary = (string) $name['value'];
+                break;
+            }
+        }
+        $results[] = [
+            'bggId' => $bggId,
+            'rank' => (int) $item['rank'],
+            'name' => $primary ?? 'Unknown',
+            'yearPublished' => isset($item->yearpublished) ? ((int) $item->yearpublished['value'] ?: null) : null,
+            'thumbnail' => isset($item->thumbnail) ? (string) $item->thumbnail['value'] : null,
+        ];
+    }
+    return $results;
+}
+
+/** Same as bgg_get_hot_list(), but cached to a local file for $ttlSeconds since the hot list only changes once a day. */
+function bgg_get_hot_list_cached(int $ttlSeconds = 21600): array
+{
+    $cacheFile = dirname(UPLOADS_DIR) . '/cache/bgg-hot.json';
+    if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < $ttlSeconds) {
+        $cached = json_decode(file_get_contents($cacheFile), true);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $hotList = bgg_get_hot_list();
+    $cacheDir = dirname($cacheFile);
+    if (!is_dir($cacheDir)) {
+        mkdir($cacheDir, 0755, true);
+    }
+    file_put_contents($cacheFile, json_encode($hotList));
+    return $hotList;
+}
+
 /**
  * Cleans a raw BGG description: converts stray literal <br/> tags to
  * newlines, strips any other HTML, and drops a trailing "—description

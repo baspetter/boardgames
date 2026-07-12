@@ -1,8 +1,12 @@
-<?php require_once __DIR__ . '/game-types.php'; ?>
-<div id="add-game-modal" class="modal-backdrop hidden">
+<?php
+require_once __DIR__ . '/game-types.php';
+/** @var string $addTarget 'collection' (default) or 'wishlist' — set before including this file. */
+$addTarget = $addTarget ?? 'collection';
+?>
+<div id="add-game-modal" class="modal-backdrop hidden" data-target="<?= h($addTarget) ?>">
   <div class="modal">
     <div class="modal-head">
-      <h2 style="margin:0;">Add game</h2>
+      <h2 style="margin:0;"><?= $addTarget === 'wishlist' ? 'Add to wishlist' : 'Add game' ?></h2>
       <button type="button" class="modal-close" data-close-modal>&times;</button>
     </div>
 
@@ -71,7 +75,7 @@
         </div>
         <input type="url" name="howToPlayUrl" placeholder="How to play video link (YouTube, etc.)">
         <p id="manual-error" class="error hidden"></p>
-        <button type="submit" class="btn btn-accent">Add game</button>
+        <button type="submit" class="btn btn-accent"><?= $addTarget === 'wishlist' ? 'Add to wishlist' : 'Add game' ?></button>
       </form>
     </div>
   </div>

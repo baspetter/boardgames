@@ -57,6 +57,28 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
     echo '</div>';
 }
 
+/**
+ * A "Discover" grid card for a BGG hot-list item — not necessarily cached
+ * locally yet, so it links through view-bgg.php instead of a local game id.
+ * @param array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string} $item
+ */
+function render_hot_game_card(array $item): void
+{
+    ?>
+    <a class="game-card" href="/view-bgg.php?bggId=<?= (int) $item['bggId'] ?>">
+      <?php if ($item['thumbnail']): ?>
+        <img src="<?= h($item['thumbnail']) ?>" alt="<?= h($item['name']) ?>" loading="lazy">
+      <?php else: ?>
+        <div class="no-image">No image</div>
+      <?php endif; ?>
+      <span class="rating-badge">#<?= (int) $item['rank'] ?></span>
+      <div class="card-overlay">
+        <p class="card-title"><?= h($item['name']) ?><?php if ($item['yearPublished']): ?> <span class="card-title-year">(<?= h($item['yearPublished']) ?>)</span><?php endif; ?></p>
+      </div>
+    </a>
+    <?php
+}
+
 /** A labeled row of tag chips (categories/mechanics), collapsed behind a "+N more" toggle past $visibleLimit. */
 function render_tag_chips(string $label, array $tags, int $visibleLimit = 6): void
 {

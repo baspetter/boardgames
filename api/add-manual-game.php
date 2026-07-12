@@ -36,7 +36,8 @@ try {
         'howToPlayUrl' => $data['howToPlayUrl'] ?? null,
     ]);
 
-    db()->prepare('INSERT INTO collection_entries (user_id, game_id) VALUES (?, ?)')
+    $table = ($data['target'] ?? 'collection') === 'wishlist' ? 'wishlist_entries' : 'collection_entries';
+    db()->prepare("INSERT INTO $table (user_id, game_id) VALUES (?, ?)")
         ->execute([$userId, $gameId]);
 
     json_response(['ok' => true, 'gameId' => $gameId]);

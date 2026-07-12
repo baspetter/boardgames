@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // BGG search-as-you-type
   const searchInput = document.getElementById('bgg-search-input');
   const resultsDiv = document.getElementById('bgg-search-results');
+  const addGameModal = document.getElementById('add-game-modal');
+  const addTarget = addGameModal ? addGameModal.dataset.target || 'collection' : 'collection';
   let debounceTimer;
   if (searchInput && resultsDiv) {
     searchInput.addEventListener('input', () => {
@@ -127,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '</span><span style="color:var(--accent);font-size:0.75rem;">+ Add</span>';
               btn.addEventListener('click', () => {
                 btn.disabled = true;
-                postJson('/api/add-game.php', { bggId: item.bggId })
+                postJson('/api/add-game.php', { bggId: item.bggId, target: addTarget })
                   .then(() => window.location.reload())
                   .catch((err) => {
                     alert(err.message);
@@ -147,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     linkForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const input = document.getElementById('bgg-link-input');
-      postJson('/api/add-game.php', { link: input.value })
+      postJson('/api/add-game.php', { link: input.value, target: addTarget })
         .then(() => window.location.reload())
         .catch((err) => showError('bgg-link-error', err.message));
     });
@@ -158,7 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (manualForm) {
     manualForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      postForm('/api/add-manual-game.php', new FormData(manualForm))
+      const formData = new FormData(manualForm);
+      formData.set('target', addTarget);
+      postForm('/api/add-manual-game.php', formData)
         .then(() => window.location.reload())
         .catch((err) => showError('manual-error', err.message));
     });
@@ -232,11 +236,17 @@ document.addEventListener('DOMContentLoaded', () => {
         'remove-game': '/api/remove-game.php',
         'add-to-collection': '/api/add-game.php',
         'refresh-bgg': '/api/refresh-bgg.php',
+        'add-to-wishlist': '/api/add-game.php',
+        'remove-from-wishlist': '/api/remove-game.php',
+        'move-to-collection': '/api/move-to-collection.php',
       };
       const payloads = {
         'remove-game': { gameId },
         'add-to-collection': { gameId },
         'refresh-bgg': { gameId },
+        'add-to-wishlist': { gameId, target: 'wishlist' },
+        'remove-from-wishlist': { gameId, target: 'wishlist' },
+        'move-to-collection': { gameId },
       };
       btn.disabled = true;
       postJson(urls[action], payloads[action])

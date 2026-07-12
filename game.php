@@ -17,6 +17,10 @@ $stmt = db()->prepare('SELECT id FROM collection_entries WHERE user_id = ? AND g
 $stmt->execute([$userId, $gameId]);
 $myEntry = $stmt->fetch();
 
+$stmt = db()->prepare('SELECT id FROM wishlist_entries WHERE user_id = ? AND game_id = ?');
+$stmt->execute([$userId, $gameId]);
+$myWishlistEntry = $stmt->fetch();
+
 $categories = json_col($game['categories']);
 $mechanics = json_col($game['mechanics']);
 $designers = json_col($game['designers']);
@@ -44,8 +48,12 @@ require __DIR__ . '/includes/header.php';
       <button type="button" class="edit-icon-btn" data-open-modal="edit-game-modal" title="Edit game" aria-label="Edit game">&#9998;</button>
     </div>
     <div class="game-detail-actions">
-      <?php if (!$myEntry): ?>
+      <?php if (!$myEntry && $myWishlistEntry): ?>
+        <button type="button" class="btn btn-accent" data-action="move-to-collection" data-game-id="<?= $gameId ?>">+ Move to my collection</button>
+        <button type="button" class="btn btn-secondary" data-action="remove-from-wishlist" data-game-id="<?= $gameId ?>">Remove from wishlist</button>
+      <?php elseif (!$myEntry): ?>
         <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
+        <button type="button" class="btn btn-secondary" data-action="add-to-wishlist" data-game-id="<?= $gameId ?>">+ Add to wishlist</button>
       <?php endif; ?>
 
       <a class="btn btn-secondary" href="<?= h($game['how_to_play_url'] ?: youtube_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">&#9654; How to play</a>

@@ -6,8 +6,9 @@ require_csrf();
 
 $data = json_body();
 $gameId = (int) ($data['gameId'] ?? 0);
+$table = ($data['target'] ?? 'collection') === 'wishlist' ? 'wishlist_entries' : 'collection_entries';
 
-db()->prepare('DELETE FROM collection_entries WHERE user_id = ? AND game_id = ?')
+db()->prepare("DELETE FROM $table WHERE user_id = ? AND game_id = ?")
     ->execute([$userId, $gameId]);
 
 json_response(['ok' => true]);

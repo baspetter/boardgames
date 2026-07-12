@@ -45,6 +45,8 @@ $activeNav = $activeNav ?? null;
   </div>
   <nav class="main-nav">
     <a class="main-nav-btn<?= $activeNav === 'collection' ? ' active' : '' ?>" href="/">Collection</a>
+    <a class="main-nav-btn<?= $activeNav === 'wishlist' ? ' active' : '' ?>" href="/wishlist.php">Wishlist</a>
+    <a class="main-nav-btn<?= $activeNav === 'discover' ? ' active' : '' ?>" href="/discover.php">Discover</a>
     <a class="main-nav-btn<?= $activeNav === 'playgroups' ? ' active' : '' ?>" href="/playgroups.php">Playgroups</a>
     <a class="main-nav-btn<?= $activeNav === 'gamenights' ? ' active' : '' ?>" href="/gamenights.php">Gamenights</a>
   </nav>

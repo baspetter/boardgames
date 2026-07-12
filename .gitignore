@@ -1,5 +1,6 @@
 .env
 uploads/covers/*
 !uploads/covers/.gitkeep
+uploads/cache/
 *.log
 .DS_Store

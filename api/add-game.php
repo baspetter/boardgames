@@ -25,9 +25,10 @@ try {
         json_response(['error' => 'No game specified'], 400);
     }
 
+    $table = ($data['target'] ?? 'collection') === 'wishlist' ? 'wishlist_entries' : 'collection_entries';
     db()->prepare(
-        'INSERT INTO collection_entries (user_id, game_id) VALUES (?, ?)
-         ON DUPLICATE KEY UPDATE user_id = user_id'
+        "INSERT INTO $table (user_id, game_id) VALUES (?, ?)
+         ON DUPLICATE KEY UPDATE user_id = user_id"
     )->execute([$userId, $game['id']]);
 
     json_response(['ok' => true, 'gameId' => $game['id']]);
