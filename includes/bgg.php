@@ -110,6 +110,32 @@ function bgg_search(string $query): array
     return $results;
 }
 
+/**
+ * Cleans a raw BGG description: converts stray literal <br/> tags to
+ * newlines, strips any other HTML, and drops a trailing "—description
+ * from the publisher"-style credit line some BGG entries end with.
+ */
+function bgg_clean_description(string $raw): string
+{
+    $text = str_ireplace(['<br/>', '<br />', '<br>'], "\n", $raw);
+    $text = trim(strip_tags($text));
+    $text = preg_replace('/[\x{2014}\x{2013}-]\s*description from the publisher\.?\s*$/iu', '', $text);
+    return trim($text);
+}
+
+/** Derives a short one-line tagline from the first line/sentence of a (cleaned) description. */
+function bgg_extract_tagline(string $description): ?string
+{
+    $firstLine = trim(strtok($description, "\n"));
+    if (preg_match('/^(.{15,200}?[.!?])(\s|$)/u', $firstLine, $m)) {
+        $firstLine = trim($m[1]);
+    }
+    if (mb_strlen($firstLine) < 10) {
+        return null;
+    }
+    return mb_strlen($firstLine) > 200 ? mb_substr($firstLine, 0, 197) . '...' : $firstLine;
+}
+
 /** @return array<string, mixed> */
 function bgg_get_thing(int $bggId): array
 {
@@ -159,13 +185,16 @@ function bgg_get_thing(int $bggId): array
         }
     }
 
+    $description = isset($item->description) ? bgg_clean_description((string) $item->description) : null;
+
     return [
         'bggId' => $bggId,
         'name' => $primaryName ?? 'Unknown',
         'yearPublished' => isset($item->yearpublished) ? (int) $item->yearpublished['value'] : null,
         'image' => isset($item->image) ? (string) $item->image : null,
         'thumbnail' => isset($item->thumbnail) ? (string) $item->thumbnail : null,
-        'description' => isset($item->description) ? trim((string) $item->description) : null,
+        'description' => $description,
+        'tagline' => $description !== null ? bgg_extract_tagline($description) : null,
         'minPlayers' => isset($item->minplayers) ? (int) $item->minplayers['value'] : null,
         'maxPlayers' => isset($item->maxplayers) ? (int) $item->maxplayers['value'] : null,
         'playingTime' => isset($item->playingtime) ? (int) $item->playingtime['value'] : null,

@@ -80,7 +80,10 @@ function upsert_bgg_game(?int $gameId, array $details): array
         $stmt = $pdo->prepare("UPDATE games SET $set WHERE id = :id");
         $stmt->execute([...$fields, 'id' => $gameId]);
     } else {
+        // Only set the tagline on first import — never overwrite a user's own
+        // edit to it on a later "Update with BGG" refresh.
         $fields['bgg_id'] = $details['bggId'];
+        $fields['tagline'] = $details['tagline'] ?? null;
         $cols = implode(', ', array_keys($fields));
         $placeholders = implode(', ', array_map(fn($k) => ":$k", array_keys($fields)));
         $stmt = $pdo->prepare("INSERT INTO games ($cols) VALUES ($placeholders)");
