@@ -295,7 +295,7 @@ function get_similar_games_in_collection(int $userId, int $excludeGameId, array 
     $stmt = db()->prepare(
         'SELECT g.* FROM collection_entries ce
          JOIN games g ON g.id = ce.game_id
-         WHERE ce.user_id = ? AND g.id != ?'
+         WHERE ce.user_id = ? AND g.id != ? AND g.expansion_of IS NULL'
     );
     $stmt->execute([$userId, $excludeGameId]);
     return rank_games_by_tag_overlap($stmt->fetchAll(), $tags, $limit);
@@ -317,6 +317,7 @@ function get_similar_games_in_playgroups(int $userId, int $excludeGameId, array 
          )
          AND ce.user_id != ?
          AND g.id != ?
+         AND g.expansion_of IS NULL
          AND g.id NOT IN (SELECT game_id FROM collection_entries WHERE user_id = ?)'
     );
     $stmt->execute([$userId, $userId, $excludeGameId, $userId]);
