@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS games (
   bgg_rating      DECIMAL(4,2) NULL,
   bgg_rank        INT NULL,
   categories      JSON NULL,              -- ["Strategie", ...]
+  primary_category VARCHAR(100) NULL,     -- which of `categories` to show on hover; falls back to categories[0]
   mechanics       JSON NULL,              -- ["Dice Rolling", ...]
   designers       JSON NULL,              -- [{"bggId":26,"name":"Klaus Teuber"}, ...]
   artists         JSON NULL,

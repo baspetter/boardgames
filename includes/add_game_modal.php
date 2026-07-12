@@ -54,6 +54,16 @@
           </select>
           <p class="hint" style="margin-top:0.25rem;">Game type — Ctrl/Cmd-click to select multiple.</p>
         </div>
+        <div>
+          <label class="field-label">Primary category</label>
+          <select name="primaryCategory">
+            <option value="">First selected type</option>
+            <?php foreach (GAME_TYPES as $type): ?>
+              <option value="<?= h($type) ?>"><?= h($type) ?></option>
+            <?php endforeach; ?>
+          </select>
+          <p class="hint" style="margin-top:0.25rem;">Shown when you hover over this game in your collection.</p>
+        </div>
         <div class="field-row">
           <div><label class="field-label">Designers</label><input type="text" name="designers" placeholder="Comma-separated names"></div>
           <div><label class="field-label">Illustrators</label><input type="text" name="artists" placeholder="Comma-separated names"></div>

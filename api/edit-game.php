@@ -29,6 +29,7 @@ try {
         'weight' => $toFloatOrNull($data['weight'] ?? null),
         'bggRating' => $toFloatOrNull($data['bggRating'] ?? null),
         'gameType' => $data['gameType'] ?? null,
+        'primaryCategory' => $toStringOrNull($data['primaryCategory'] ?? null),
         'designers' => $data['designers'] ?? null,
         'artists' => $data['artists'] ?? null,
         'howToPlayUrl' => $data['howToPlayUrl'] ?? null,

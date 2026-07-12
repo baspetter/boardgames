@@ -2,6 +2,9 @@
 require_once __DIR__ . '/game-types.php';
 /** @var array $game */
 /** @var array|false|null $myEntry */
+$currentCategories = json_col($game['categories'] ?? null);
+$primaryCategoryOptions = array_unique([...$currentCategories, ...GAME_TYPES]);
+sort($primaryCategoryOptions, SORT_NATURAL | SORT_FLAG_CASE);
 ?>
 <div id="edit-game-modal" class="modal-backdrop hidden">
   <div class="modal">
@@ -37,6 +40,16 @@ require_once __DIR__ . '/game-types.php';
           <?php endforeach; ?>
         </select>
         <p class="hint" style="margin-top:0.25rem;">Game type — Ctrl/Cmd-click to select multiple. Leave nothing selected to keep existing categories/tags.</p>
+      </div>
+      <div>
+        <label class="field-label">Primary category</label>
+        <select name="primaryCategory">
+          <option value="">First category</option>
+          <?php foreach ($primaryCategoryOptions as $type): ?>
+            <option value="<?= h($type) ?>" <?= ($game['primary_category'] ?? '') === $type ? 'selected' : '' ?>><?= h($type) ?></option>
+          <?php endforeach; ?>
+        </select>
+        <p class="hint" style="margin-top:0.25rem;">Shown when you hover over this game in your collection.</p>
       </div>
       <div class="field-row">
         <div><label class="field-label">Designers</label><input type="text" name="designers" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['designers']), 'name'))) ?>"></div>
