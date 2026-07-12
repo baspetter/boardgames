@@ -43,12 +43,30 @@ $activeNav = $activeNav ?? null;
     <img class="background" src="/assets/header-background.png" alt="">
     <img class="logo" src="/assets/header-logo.png" alt="<?= h(SITE_NAME) ?>">
   </div>
+  <?php
+  $navLinks = [
+      'collection' => ['/', 'Collection'],
+      'wishlist' => ['/wishlist.php', 'Wishlist'],
+      'discover' => ['/discover.php', 'Discover'],
+      'playgroups' => ['/playgroups.php', 'Playgroups'],
+      'gamenights' => ['/gamenights.php', 'Gamenights'],
+  ];
+  ?>
   <nav class="main-nav">
-    <a class="main-nav-btn<?= $activeNav === 'collection' ? ' active' : '' ?>" href="/">Collection</a>
-    <a class="main-nav-btn<?= $activeNav === 'wishlist' ? ' active' : '' ?>" href="/wishlist.php">Wishlist</a>
-    <a class="main-nav-btn<?= $activeNav === 'discover' ? ' active' : '' ?>" href="/discover.php">Discover</a>
-    <a class="main-nav-btn<?= $activeNav === 'playgroups' ? ' active' : '' ?>" href="/playgroups.php">Playgroups</a>
-    <a class="main-nav-btn<?= $activeNav === 'gamenights' ? ' active' : '' ?>" href="/gamenights.php">Gamenights</a>
+    <?php foreach ($navLinks as $key => [$href, $label]): ?>
+      <a class="main-nav-btn<?= $activeNav === $key ? ' active' : '' ?>" href="<?= h($href) ?>"><?= h($label) ?></a>
+    <?php endforeach; ?>
   </nav>
+  <div class="mobile-nav">
+    <button type="button" class="mobile-nav-btn" id="mobile-nav-btn" aria-haspopup="true" aria-expanded="false" aria-label="Menu">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <span><?= h($navLinks[$activeNav][1] ?? 'Menu') ?></span>
+    </button>
+    <div class="mobile-nav-dropdown hidden" id="mobile-nav-dropdown">
+      <?php foreach ($navLinks as $key => [$href, $label]): ?>
+        <a class="<?= $activeNav === $key ? 'active' : '' ?>" href="<?= h($href) ?>"><?= h($label) ?></a>
+      <?php endforeach; ?>
+    </div>
+  </div>
 <?php endif; ?>
 <main class="container">

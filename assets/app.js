@@ -69,6 +69,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Mobile hamburger nav dropdown
+  const mobileNavBtn = document.getElementById('mobile-nav-btn');
+  const mobileNavDropdown = document.getElementById('mobile-nav-dropdown');
+  if (mobileNavBtn && mobileNavDropdown) {
+    mobileNavBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mobileNavDropdown.classList.toggle('hidden') === false;
+      mobileNavBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+    document.addEventListener('click', (e) => {
+      if (!mobileNavDropdown.classList.contains('hidden') && !mobileNavDropdown.contains(e.target)) {
+        mobileNavDropdown.classList.add('hidden');
+        mobileNavBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
   // Tabs within the add-game modal
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {

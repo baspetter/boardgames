@@ -205,15 +205,61 @@ a {
 .main-nav-btn.active:hover {
   background-color: var(--accent-hover);
 }
+.mobile-nav {
+  display: none;
+}
 @media (max-width: 639px) {
   .main-nav {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    display: none;
   }
-  .main-nav-btn {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    padding: 1.1rem 1.15rem;
+  .mobile-nav {
+    display: block;
+    position: relative;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: 1rem 0.75rem;
+    background: var(--background);
+  }
+  .mobile-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 1.1rem 1rem;
+    background-color: var(--surface-hover);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+  }
+  .mobile-nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  .mobile-nav-dropdown {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    top: 100%;
+    margin-top: 0.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    z-index: 20;
+  }
+  .mobile-nav-dropdown a {
+    display: block;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .mobile-nav-dropdown a:hover {
+    background: var(--surface-hover);
+  }
+  .mobile-nav-dropdown a.active {
+    background: var(--accent);
+    color: #fff;
   }
 }
 
