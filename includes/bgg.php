@@ -117,7 +117,11 @@ function bgg_search(string $query): array
  */
 function bgg_clean_description(string $raw): string
 {
-    $text = str_ireplace(['<br/>', '<br />', '<br>'], "\n", $raw);
+    // SimpleXML only decodes the 5 predefined XML entities (&amp; &lt; &gt;
+    // &quot; &apos;), so a named HTML entity like &mdash; in BGG's XML
+    // survives as the literal string "&mdash;" until decoded here.
+    $text = html_entity_decode($raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = str_ireplace(['<br/>', '<br />', '<br>'], "\n", $text);
     $text = trim(strip_tags($text));
     $text = preg_replace('/[\x{2014}\x{2013}-]\s*description from the publisher\.?\s*$/iu', '', $text);
     return trim($text);
