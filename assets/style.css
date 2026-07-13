@@ -601,6 +601,8 @@ input:focus, textarea:focus, select:focus {
 }
 @media (max-width: 480px) {
   .stat-chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 0.4rem;
   }
   .stat-chip {
