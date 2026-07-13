@@ -182,7 +182,10 @@ function bgg_get_hot_list_cached(int $ttlSeconds = 21600): array
     $cacheFile = dirname(UPLOADS_DIR) . '/cache/bgg-hot.json';
     if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < $ttlSeconds) {
         $cached = json_decode(file_get_contents($cacheFile), true);
-        if (is_array($cached)) {
+        // Reject caches written before the 'image' field existed, so a
+        // stale file on disk doesn't keep serving low-res thumbnails for
+        // up to $ttlSeconds after a deploy.
+        if (is_array($cached) && (empty($cached) || array_key_exists('image', $cached[0]))) {
             return $cached;
         }
     }
