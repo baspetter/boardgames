@@ -110,7 +110,33 @@ function bgg_search(string $query): array
     return $results;
 }
 
-/** BGG's "Hot Board Games" list (trending, updated daily by BGG). @return array<int, array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string}> */
+/**
+ * Batch-fetches full-size 'image' URLs for the given BGG ids via a single
+ * /thing request. BGG's /hot endpoint only exposes a small thumbnail, no
+ * full-size image, so hot-list callers need this to show sharper covers.
+ * @return array<int, string> bggId => image URL
+ */
+function bgg_fetch_full_images(array $bggIds): array
+{
+    if (empty($bggIds)) {
+        return [];
+    }
+    $url = BGG_BASE . '/thing?id=' . implode(',', $bggIds);
+    $xml = simplexml_load_string(bgg_fetch($url));
+    if ($xml === false) {
+        return [];
+    }
+    $images = [];
+    foreach ($xml->item as $item) {
+        $bggId = (int) $item['id'];
+        if ($bggId > 0 && isset($item->image)) {
+            $images[$bggId] = (string) $item->image;
+        }
+    }
+    return $images;
+}
+
+/** BGG's "Hot Board Games" list (trending, updated daily by BGG). @return array<int, array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string, image:?string}> */
 function bgg_get_hot_list(): array
 {
     $url = BGG_BASE . '/hot?type=boardgame';
@@ -140,6 +166,13 @@ function bgg_get_hot_list(): array
             'thumbnail' => isset($item->thumbnail) ? (string) $item->thumbnail['value'] : null,
         ];
     }
+
+    $images = bgg_fetch_full_images(array_column($results, 'bggId'));
+    foreach ($results as &$result) {
+        $result['image'] = $images[$result['bggId']] ?? null;
+    }
+    unset($result);
+
     return $results;
 }
 

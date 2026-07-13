@@ -60,14 +60,15 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
 /**
  * A recommendation card for a BGG hot-list item — not necessarily cached
  * locally yet, so it links through view-bgg.php instead of a local game id.
- * @param array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string} $item
+ * @param array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string, image:?string} $item
  */
 function render_hot_game_card(array $item): void
 {
+    $cover = $item['image'] ?? $item['thumbnail'] ?? null;
     ?>
     <a class="game-card" href="/view-bgg.php?bggId=<?= (int) $item['bggId'] ?>">
-      <?php if ($item['thumbnail']): ?>
-        <img src="<?= h($item['thumbnail']) ?>" alt="<?= h($item['name']) ?>" loading="lazy">
+      <?php if ($cover): ?>
+        <img src="<?= h($cover) ?>" alt="<?= h($item['name']) ?>" loading="lazy">
       <?php else: ?>
         <div class="no-image">No image</div>
       <?php endif; ?>
