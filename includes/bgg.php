@@ -111,26 +111,26 @@ function bgg_search(string $query): array
 }
 
 /**
- * Batch-fetches full-size 'image' URLs for the given BGG ids via a single
- * /thing request. BGG's /hot endpoint only exposes a small thumbnail, no
- * full-size image, so hot-list callers need this to show sharper covers.
+ * Batch-fetches full-size 'image' URLs for the given BGG ids via /thing
+ * requests, in chunks (BGG returns 400 if too many ids are requested at
+ * once). BGG's /hot endpoint only exposes a small thumbnail, no full-size
+ * image, so hot-list callers need this to show sharper covers.
  * @return array<int, string> bggId => image URL
  */
 function bgg_fetch_full_images(array $bggIds): array
 {
-    if (empty($bggIds)) {
-        return [];
-    }
-    $url = BGG_BASE . '/thing?id=' . implode(',', $bggIds);
-    $xml = simplexml_load_string(bgg_fetch($url));
-    if ($xml === false) {
-        return [];
-    }
     $images = [];
-    foreach ($xml->item as $item) {
-        $bggId = (int) $item['id'];
-        if ($bggId > 0 && isset($item->image)) {
-            $images[$bggId] = (string) $item->image;
+    foreach (array_chunk($bggIds, 20) as $chunk) {
+        $url = BGG_BASE . '/thing?id=' . implode(',', $chunk);
+        $xml = simplexml_load_string(bgg_fetch($url));
+        if ($xml === false) {
+            continue;
+        }
+        foreach ($xml->item as $item) {
+            $bggId = (int) $item['id'];
+            if ($bggId > 0 && isset($item->image)) {
+                $images[$bggId] = (string) $item->image;
+            }
         }
     }
     return $images;
