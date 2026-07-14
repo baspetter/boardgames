@@ -16,7 +16,7 @@ if (!isset($sortOptions[$sort])) {
 
 $stmt = db()->prepare(
     "SELECT g.* FROM games g JOIN wishlist_entries we ON we.game_id = g.id
-     WHERE we.user_id = ? AND (g.expansion_of IS NULL OR g.show_in_collection = 1) ORDER BY {$sortOptions[$sort]}"
+     WHERE we.user_id = ? ORDER BY {$sortOptions[$sort]}"
 );
 $stmt->execute([$userId]);
 $games = $stmt->fetchAll();
