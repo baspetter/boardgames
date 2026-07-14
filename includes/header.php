@@ -53,6 +53,7 @@ $activeNav = $activeNav ?? null;
   ?>
   <div class="site-nav">
     <div class="site-nav-bar">
+      <span class="site-nav-title"><?= h($navLinks[$activeNav][1] ?? SITE_NAME) ?></span>
       <button type="button" class="site-nav-btn" id="site-nav-btn" aria-haspopup="true" aria-expanded="false" aria-label="Menu">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
