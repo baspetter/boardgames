@@ -339,3 +339,83 @@ function rank_games_by_tag_overlap(array $games, array $tags, int $limit): array
     usort($scored, fn($a, $b) => $b['overlap'] <=> $a['overlap'] ?: ($b['game']['bgg_rating'] <=> $a['game']['bgg_rating']));
     return array_slice(array_column($scored, 'game'), 0, $limit);
 }
+
+/** Whether $game's categories or mechanics include $tag (case-insensitive). */
+function game_has_tag(array $game, string $tag): bool
+{
+    $tagLower = mb_strtolower($tag);
+    $gameTags = array_map('mb_strtolower', array_merge(json_col($game['categories'] ?? null), json_col($game['mechanics'] ?? null)));
+    return in_array($tagLower, $gameTags, true);
+}
+
+/**
+ * Games (excluding expansions) tagged $tag, already owned by $userId or
+ * anyone sharing a playgroup with them, with each game's list of owners.
+ * @return array<int, array{game: array, owners: array}>
+ */
+function get_tag_games_in_collection(int $userId, string $tag): array
+{
+    $stmt = db()->prepare(
+        'SELECT g.*, u.id AS owner_id, u.username AS owner_username
+         FROM collection_entries ce
+         JOIN games g ON g.id = ce.game_id
+         JOIN users u ON u.id = ce.user_id
+         WHERE g.expansion_of IS NULL
+           AND ce.user_id IN (
+             SELECT pgm2.user_id FROM play_group_members pgm1
+             JOIN play_group_members pgm2 ON pgm2.play_group_id = pgm1.play_group_id
+             WHERE pgm1.user_id = ?
+             UNION SELECT ?
+           )'
+    );
+    $stmt->execute([$userId, $userId]);
+
+    $byGame = [];
+    foreach ($stmt->fetchAll() as $row) {
+        $gameId = (int) $row['id'];
+        if (!isset($byGame[$gameId])) {
+            $gameFields = $row;
+            unset($gameFields['owner_id'], $gameFields['owner_username']);
+            $byGame[$gameId] = ['game' => $gameFields, 'owners' => []];
+        }
+        $byGame[$gameId]['owners'][] = ['id' => $row['owner_id'], 'username' => $row['owner_username']];
+    }
+
+    $entries = array_values(array_filter($byGame, fn($e) => game_has_tag($e['game'], $tag)));
+    usort($entries, fn($a, $b) => ($b['game']['bgg_rating'] ?? -1) <=> ($a['game']['bgg_rating'] ?? -1));
+    return $entries;
+}
+
+/**
+ * Games tagged $tag anywhere in the local cache, excluding expansions and
+ * anything already owned by $userId or their playgroup-mates, ordered by
+ * BGG rating (best first, unrated last).
+ */
+function get_uncollected_games_by_tag(int $userId, string $tag, int $limit = 24): array
+{
+    $stmt = db()->prepare(
+        'SELECT * FROM games
+         WHERE expansion_of IS NULL
+           AND id NOT IN (
+             SELECT game_id FROM collection_entries WHERE user_id IN (
+               SELECT pgm2.user_id FROM play_group_members pgm1
+               JOIN play_group_members pgm2 ON pgm2.play_group_id = pgm1.play_group_id
+               WHERE pgm1.user_id = ?
+               UNION SELECT ?
+             )
+           )
+         ORDER BY (bgg_rating IS NULL) ASC, bgg_rating DESC'
+    );
+    $stmt->execute([$userId, $userId]);
+
+    $matches = [];
+    foreach ($stmt->fetchAll() as $g) {
+        if (game_has_tag($g, $tag)) {
+            $matches[] = $g;
+            if (count($matches) >= $limit) {
+                break;
+            }
+        }
+    }
+    return $matches;
+}

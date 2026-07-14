@@ -99,7 +99,7 @@ function render_tag_chips(string $label, array $tags, int $visibleLimit = 6): vo
     echo '<div class="tag-chips">';
     foreach ($tags as $i => $tag) {
         $class = $i >= $visibleLimit ? 'tag-chip tag-chip-extra hidden' : 'tag-chip';
-        echo '<div class="' . $class . '">' . $icon . h($tag) . '</div>';
+        echo '<a class="' . $class . '" href="/tag.php?name=' . urlencode($tag) . '">' . $icon . h($tag) . '</a>';
     }
     if ($extraCount > 0) {
         echo '<button type="button" class="tag-chip tag-chip-toggle">+' . $extraCount . ' more</button>';

@@ -498,6 +498,11 @@ input:focus, textarea:focus, select:focus {
   padding: 0.4rem 0.65rem;
   font-size: 0.8rem;
   color: var(--text-dim);
+  text-decoration: none;
+}
+.tag-chip:hover {
+  background: var(--surface-hover);
+  color: var(--text);
 }
 .tag-chip svg {
   color: var(--accent);
@@ -511,6 +516,7 @@ input:focus, textarea:focus, select:focus {
 }
 .tag-chip-toggle:hover {
   background: var(--surface-hover);
+  color: var(--accent);
 }
 .similar-cards {
   display: grid;
