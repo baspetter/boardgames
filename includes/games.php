@@ -259,6 +259,11 @@ function update_game(int $gameId, array $input): void
         $params[] = json_encode(parse_names_list($input['publishers']));
     }
 
+    if (array_key_exists('showInCollection', $input)) {
+        $set[] = 'show_in_collection = ?';
+        $params[] = $input['showInCollection'] ? 1 : 0;
+    }
+
     if (!empty($input['imageUploadPath'])) {
         $images = optimize_and_store_uploaded_image($input['imageUploadPath'], $gameId);
         if ($images['image']) {
@@ -295,7 +300,7 @@ function get_similar_games_in_collection(int $userId, int $excludeGameId, array 
     $stmt = db()->prepare(
         'SELECT g.* FROM collection_entries ce
          JOIN games g ON g.id = ce.game_id
-         WHERE ce.user_id = ? AND g.id != ? AND g.expansion_of IS NULL'
+         WHERE ce.user_id = ? AND g.id != ? AND (g.expansion_of IS NULL OR g.show_in_collection = 1)'
     );
     $stmt->execute([$userId, $excludeGameId]);
     return rank_games_by_tag_overlap($stmt->fetchAll(), $tags, $limit);
@@ -317,7 +322,7 @@ function get_similar_games_in_playgroups(int $userId, int $excludeGameId, array 
          )
          AND ce.user_id != ?
          AND g.id != ?
-         AND g.expansion_of IS NULL
+         AND (g.expansion_of IS NULL OR g.show_in_collection = 1)
          AND g.id NOT IN (SELECT game_id FROM collection_entries WHERE user_id = ?)'
     );
     $stmt->execute([$userId, $userId, $excludeGameId, $userId]);
@@ -360,7 +365,7 @@ function get_tag_games_in_collection(int $userId, string $tag): array
          FROM collection_entries ce
          JOIN games g ON g.id = ce.game_id
          JOIN users u ON u.id = ce.user_id
-         WHERE g.expansion_of IS NULL
+         WHERE (g.expansion_of IS NULL OR g.show_in_collection = 1)
            AND ce.user_id IN (
              SELECT pgm2.user_id FROM play_group_members pgm1
              JOIN play_group_members pgm2 ON pgm2.play_group_id = pgm1.play_group_id
@@ -395,7 +400,7 @@ function get_uncollected_games_by_tag(int $userId, string $tag, int $limit = 24)
 {
     $stmt = db()->prepare(
         'SELECT * FROM games
-         WHERE expansion_of IS NULL
+         WHERE (expansion_of IS NULL OR show_in_collection = 1)
            AND id NOT IN (
              SELECT game_id FROM collection_entries WHERE user_id IN (
                SELECT pgm2.user_id FROM play_group_members pgm1

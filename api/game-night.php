@@ -28,7 +28,7 @@ $stmt = db()->prepare(
      FROM collection_entries ce
      JOIN games g ON g.id = ce.game_id
      JOIN users u ON u.id = ce.user_id
-     WHERE ce.user_id IN ($placeholders) AND g.expansion_of IS NULL"
+     WHERE ce.user_id IN ($placeholders) AND (g.expansion_of IS NULL OR g.show_in_collection = 1)"
 );
 $stmt->execute($validPresentIds);
 

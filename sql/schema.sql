@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS games (
   publishers      JSON NULL,
   expansions      JSON NULL,              -- [{"bggId":X,"name":"..."}] — this game's own expansions
   expansion_of    JSON NULL,              -- {"bggId":X,"name":"..."} if this game IS an expansion, else NULL
+  show_in_collection TINYINT(1) NOT NULL DEFAULT 0, -- override: show in collection/similar/tag grids even though this is an expansion
   how_to_play_url VARCHAR(500) NULL,
   cached_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

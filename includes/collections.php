@@ -34,7 +34,7 @@ function get_playgroup_collection(int $playGroupId): array
          JOIN games g ON g.id = ce.game_id
          JOIN users u ON u.id = ce.user_id
          JOIN play_group_members pgm ON pgm.user_id = ce.user_id
-         WHERE pgm.play_group_id = ? AND g.expansion_of IS NULL
+         WHERE pgm.play_group_id = ? AND (g.expansion_of IS NULL OR g.show_in_collection = 1)
          ORDER BY ce.added_at DESC'
     );
     $stmt->execute([$playGroupId]);

@@ -34,6 +34,7 @@ try {
         'artists' => $data['artists'] ?? null,
         'publishers' => $data['publishers'] ?? null,
         'howToPlayUrl' => $data['howToPlayUrl'] ?? null,
+        'showInCollection' => isset($data['showInCollection']) ? 1 : 0,
     ]);
     json_response(['ok' => true]);
 } catch (Throwable $e) {

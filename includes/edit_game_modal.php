@@ -57,6 +57,12 @@ sort($primaryCategoryOptions, SORT_NATURAL | SORT_FLAG_CASE);
         <div><label class="field-label">Publishers</label><input type="text" name="publishers" placeholder="Comma-separated names" value="<?= h(implode(', ', array_column(json_col($game['publishers']), 'name'))) ?>"></div>
       </div>
       <input type="url" name="howToPlayUrl" placeholder="How to play video link" value="<?= h($game['how_to_play_url'] ?? '') ?>">
+      <?php if (!empty($game['expansion_of'])): ?>
+        <label class="hint" style="display:flex;align-items:center;gap:0.5rem;">
+          <input type="checkbox" name="showInCollection" value="1" <?= !empty($game['show_in_collection']) ? 'checked' : '' ?>>
+          Show in collection overview (don't hide it as an expansion)
+        </label>
+      <?php endif; ?>
       <p id="edit-error" class="error hidden"></p>
       <button type="submit" class="btn btn-accent">Save</button>
     </form>
