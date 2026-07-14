@@ -20,8 +20,6 @@ $pageTitle = 'Our gamenights - ' . SITE_NAME;
 $activeNav = 'gamenights';
 require __DIR__ . '/includes/header.php';
 ?>
-<h1>Our gamenights</h1>
-
 <?php if (!$groupsData): ?>
   <p class="hint">You're not a member of a playgroup yet.</p>
 <?php else: ?>

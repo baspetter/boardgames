@@ -34,20 +34,17 @@ $pageTitle = 'My wishlist - ' . SITE_NAME;
 $activeNav = 'wishlist';
 require __DIR__ . '/includes/header.php';
 ?>
-<div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;">
-  <h1 style="margin:0;">My wishlist</h1>
-  <div style="display:flex;align-items:center;gap:0.75rem;">
-    <?php if ($games): ?>
-      <form method="get" id="sort-form">
-        <select name="sort" id="sort-select">
-          <option value="name" <?= $sort === 'name' ? 'selected' : '' ?>>Name (A-Z)</option>
-          <option value="rating" <?= $sort === 'rating' ? 'selected' : '' ?>>BGG rating (best first)</option>
-          <option value="added" <?= $sort === 'added' ? 'selected' : '' ?>>Recently added</option>
-        </select>
-      </form>
-    <?php endif; ?>
-    <button type="button" class="btn btn-accent" data-open-modal="add-game-modal">+ Add to wishlist</button>
-  </div>
+<div style="display:flex;align-items:center;justify-content:flex-end;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+  <?php if ($games): ?>
+    <form method="get" id="sort-form">
+      <select name="sort" id="sort-select">
+        <option value="name" <?= $sort === 'name' ? 'selected' : '' ?>>Name (A-Z)</option>
+        <option value="rating" <?= $sort === 'rating' ? 'selected' : '' ?>>BGG rating (best first)</option>
+        <option value="added" <?= $sort === 'added' ? 'selected' : '' ?>>Recently added</option>
+      </select>
+    </form>
+  <?php endif; ?>
+  <button type="button" class="btn btn-accent" data-open-modal="add-game-modal">+ Add to wishlist</button>
 </div>
 
 <?php render_game_grid($games, "Your wishlist is empty. Click 'Add to wishlist' for games you'd like to get.", 'wishlist'); ?>
