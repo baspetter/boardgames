@@ -67,11 +67,5 @@ sort($primaryCategoryOptions, SORT_NATURAL | SORT_FLAG_CASE);
       <button type="submit" class="btn btn-accent">Save</button>
     </form>
     <p class="hint" style="margin-top:0.5rem;">Leave "Cover art URL" empty to keep the current image.</p>
-
-    <?php if ($myEntry): ?>
-      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <button type="button" class="btn btn-secondary" data-action="remove-game" data-game-id="<?= (int) $game['id'] ?>">Remove from my collection</button>
-      </div>
-    <?php endif; ?>
   </div>
 </div>

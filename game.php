@@ -53,10 +53,12 @@ require __DIR__ . '/includes/header.php';
       <button type="button" class="edit-icon-btn" data-open-modal="edit-game-modal" title="Edit game" aria-label="Edit game">&#9998;</button>
     </div>
     <div class="game-detail-actions">
-      <?php if (!$myEntry && $myWishlistEntry): ?>
+      <?php if ($myEntry): ?>
+        <button type="button" class="btn btn-secondary" data-action="remove-game" data-game-id="<?= $gameId ?>">Remove from my collection</button>
+      <?php elseif ($myWishlistEntry): ?>
         <button type="button" class="btn btn-accent" data-action="move-to-collection" data-game-id="<?= $gameId ?>">+ Move to my collection</button>
         <button type="button" class="btn btn-secondary" data-action="remove-from-wishlist" data-game-id="<?= $gameId ?>">Remove from wishlist</button>
-      <?php elseif (!$myEntry): ?>
+      <?php else: ?>
         <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
         <button type="button" class="btn btn-secondary" data-action="add-to-wishlist" data-game-id="<?= $gameId ?>">+ Add to wishlist</button>
       <?php endif; ?>
