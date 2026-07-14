@@ -58,6 +58,12 @@ require __DIR__ . '/includes/header.php';
       <?php elseif ($myWishlistEntry): ?>
         <button type="button" class="btn btn-accent" data-action="move-to-collection" data-game-id="<?= $gameId ?>">+ Move to my collection</button>
         <button type="button" class="btn btn-secondary" data-action="remove-from-wishlist" data-game-id="<?= $gameId ?>">Remove from wishlist</button>
+        <div class="buy-links">
+          <span class="hint">Where to buy:</span>
+          <?php foreach (shop_search_urls($game['name']) as $shopLabel => $shopUrl): ?>
+            <a href="<?= h($shopUrl) ?>" target="_blank" rel="noreferrer"><?= h($shopLabel) ?></a>
+          <?php endforeach; ?>
+        </div>
       <?php else: ?>
         <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
         <button type="button" class="btn btn-secondary" data-action="add-to-wishlist" data-game-id="<?= $gameId ?>">+ Add to wishlist</button>

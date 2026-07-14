@@ -570,6 +570,21 @@ input:focus, textarea:focus, select:focus {
   flex-direction: column;
   gap: 0.5rem;
 }
+.buy-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.1rem;
+}
+.buy-links a {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.buy-links a:hover {
+  text-decoration: underline;
+}
 .stat-chips {
   display: flex;
   flex-wrap: nowrap;
