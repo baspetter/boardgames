@@ -106,11 +106,15 @@ git pull origin claude/app-dev-continue-0m80pd
 
 Geen build-stap, geen herstart nodig — PHP-bestanden worden direct
 geïnterpreteerd. Alleen bij een nieuwe entry in `sql/` (schema-wijziging) moet
-je die handmatig tegen de database draaien:
+je die tegen de database draaien:
 
 ```bash
-mysql -u JOUW_DB_USER -p JOUW_DB_NAAM < sql/nieuwe-migratie.sql
+php bin/migrate.php
 ```
+
+Dit script gebruikt je bestaande `.env`-instellingen, onthoudt welke
+migraties al zijn toegepast (in een `schema_migrations`-tabel), en is dus
+altijd veilig om opnieuw te draaien — ook als er niets nieuws is.
 
 ## Lokale ontwikkeling
 
