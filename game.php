@@ -34,7 +34,12 @@ $similarTags = array_merge($categories, $mechanics);
 $similarOwn = get_similar_games_in_collection($userId, $gameId, $similarTags);
 $similarGroup = get_similar_games_in_playgroups($userId, $gameId, $similarTags);
 
-$pageTitle = $game['name'] . ' - ' . SITE_NAME;
+$from = valid_nav_from($_GET['from'] ?? null);
+$navLinks = nav_links();
+$fromLabel = $from !== null ? $navLinks[$from][1] : null;
+$navTitle = $fromLabel !== null ? $fromLabel . ' - ' . $game['name'] : $game['name'];
+$pageTitle = $navTitle . ' - ' . SITE_NAME;
+$activeNav = $from;
 require __DIR__ . '/includes/header.php';
 ?>
 <div class="game-main-row">
@@ -77,7 +82,7 @@ require __DIR__ . '/includes/header.php';
       <p class="hint" style="margin:0.2rem 0 0;">
         Expansion of
         <?php if ($expansionOf['localGameId']): ?>
-          <a href="/game.php?id=<?= (int) $expansionOf['localGameId'] ?>" style="color:var(--accent);"><?= h($expansionOf['name']) ?></a>
+          <a href="<?= h(game_url((int) $expansionOf['localGameId'], $from)) ?>" style="color:var(--accent);"><?= h($expansionOf['name']) ?></a>
         <?php else: ?>
           <a href="https://boardgamegeek.com/boardgame/<?= (int) $expansionOf['bggId'] ?>" target="_blank" rel="noreferrer" style="color:var(--accent);"><?= h($expansionOf['name']) ?></a>
         <?php endif; ?>
@@ -200,7 +205,7 @@ require __DIR__ . '/includes/header.php';
     <?php foreach ($expansions as $exp): ?>
       <li class="expansions-list-item">
         <?php if ($exp['localGameId']): ?>
-          <a href="/game.php?id=<?= (int) $exp['localGameId'] ?>"><?= h($exp['name']) ?></a>
+          <a href="<?= h(game_url((int) $exp['localGameId'], $from)) ?>"><?= h($exp['name']) ?></a>
         <?php else: ?>
           <a href="https://boardgamegeek.com/boardgame/<?= (int) $exp['bggId'] ?>" target="_blank" rel="noreferrer"><?= h($exp['name']) ?></a>
         <?php endif; ?>
@@ -214,15 +219,19 @@ require __DIR__ . '/includes/header.php';
 
 <?php if ($similarOwn): ?>
   <h2 style="margin-top:2.5rem;">Similar in your collection</h2>
-  <?php render_similar_game_cards($similarOwn); ?>
+  <?php render_similar_game_cards($similarOwn, $from); ?>
 <?php endif; ?>
 
 <?php if ($similarGroup): ?>
   <h2 style="margin-top:2.5rem;">Similar in your playgroups</h2>
-  <?php render_similar_game_cards($similarGroup); ?>
+  <?php render_similar_game_cards($similarGroup, $from); ?>
 <?php endif; ?>
 
-<p style="margin-top:2rem;"><a href="/" class="hint">&larr; Back to collection</a></p>
+<?php if ($from !== null): ?>
+  <p style="margin-top:2rem;"><a href="<?= h($navLinks[$from][0]) ?>" class="hint">&larr; Back to <?= h($navLinks[$from][1]) ?></a></p>
+<?php else: ?>
+  <p style="margin-top:2rem;"><a href="/" class="hint">&larr; Back to collection</a></p>
+<?php endif; ?>
 
 <?php require __DIR__ . '/includes/edit_game_modal.php'; ?>
 <?php require __DIR__ . '/includes/footer.php'; ?>

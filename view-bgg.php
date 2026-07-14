@@ -11,7 +11,7 @@ if ($bggId <= 0) {
 
 try {
     $game = get_or_cache_game($bggId);
-    redirect('/game.php?id=' . $game['id']);
+    redirect(game_url((int) $game['id'], $_GET['from'] ?? null));
 } catch (Throwable $e) {
     http_response_code(502);
     exit('Could not load this game from BoardGameGeek: ' . h($e->getMessage()));

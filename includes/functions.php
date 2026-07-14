@@ -85,6 +85,33 @@ function youtube_search_url(string $gameName): string
     return 'https://www.youtube.com/results?search_query=' . urlencode($gameName . ' how to play');
 }
 
+/** Canonical top-level nav pages: key => [href, label]. Shared by the site nav and the game-detail "from" breadcrumb. */
+function nav_links(): array
+{
+    return [
+        'collection' => ['/', 'My collection'],
+        'wishlist' => ['/wishlist.php', 'My wishlist'],
+        'playgroups' => ['/playgroups.php', 'Our playgroup'],
+        'gamenights' => ['/gamenights.php', 'Our gamenights'],
+    ];
+}
+
+/** Validates a "from" breadcrumb query value against nav_links() keys; returns null if not recognized. */
+function valid_nav_from(?string $from): ?string
+{
+    return $from !== null && isset(nav_links()[$from]) ? $from : null;
+}
+
+/** Builds a /game.php?id=X link, carrying forward an optional "from" breadcrumb context. */
+function game_url(int $gameId, ?string $from = null): string
+{
+    $url = '/game.php?id=' . $gameId;
+    if (valid_nav_from($from) !== null) {
+        $url .= '&from=' . urlencode($from);
+    }
+    return $url;
+}
+
 function bgg_designer_url(int $id): string
 {
     return 'https://boardgamegeek.com/boardgamedesigner/' . $id;

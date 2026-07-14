@@ -52,6 +52,6 @@ require __DIR__ . '/includes/header.php';
 </div>
 
 <h2>Shared collection</h2>
-<?php render_game_grid($collection, 'No one in this group has added any games yet.'); ?>
+<?php render_game_grid($collection, 'No one in this group has added any games yet.', 'playgroups'); ?>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>

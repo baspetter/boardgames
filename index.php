@@ -40,7 +40,7 @@ require __DIR__ . '/includes/header.php';
   </div>
 </div>
 
-<?php render_game_grid($games, "You haven't added any games yet. Click 'Add game' to get started."); ?>
+<?php render_game_grid($games, "You haven't added any games yet. Click 'Add game' to get started.", 'collection'); ?>
 
 <?php require __DIR__ . '/includes/add_game_modal.php'; ?>
 <?php require __DIR__ . '/includes/footer.php'; ?>

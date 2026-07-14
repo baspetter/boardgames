@@ -50,7 +50,7 @@ require __DIR__ . '/includes/header.php';
   </div>
 </div>
 
-<?php render_game_grid($games, "Your wishlist is empty. Click 'Add to wishlist' for games you'd like to get."); ?>
+<?php render_game_grid($games, "Your wishlist is empty. Click 'Add to wishlist' for games you'd like to get.", 'wishlist'); ?>
 
 <h2 style="margin-top:2.5rem;">Recommendations</h2>
 <p class="hint" style="margin:0 0 1rem;">BoardGameGeek's trending "Hot Games" list, updated daily.</p>
@@ -61,7 +61,7 @@ require __DIR__ . '/includes/header.php';
 <?php else: ?>
   <div class="game-grid">
     <?php foreach (array_slice($hotList, 0, 12) as $item): ?>
-      <?php render_hot_game_card($item); ?>
+      <?php render_hot_game_card($item, 'wishlist'); ?>
     <?php endforeach; ?>
   </div>
 <?php endif; ?>

@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const g = entry.game;
         const a = document.createElement('a');
         a.className = 'game-card';
-        a.href = '/game.php?id=' + g.id;
+        a.href = '/game.php?id=' + g.id + '&from=gamenights';
         const cover = g.thumbnail || g.image;
         const owners = entry.owners.map((o) => o.username).join(', ');
         const sub = [g.year_published || '', owners].filter(Boolean).join(' · ');

@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/functions.php';
 
-/** @param array $game DB row (games table). @param array $owners [{id, username}] */
-function render_game_card(array $game, array $owners = []): void
+/** @param array $game DB row (games table). @param array $owners [{id, username}] @param ?string $from nav_links() key to breadcrumb back to */
+function render_game_card(array $game, array $owners = [], ?string $from = null): void
 {
     $cover = $game['thumbnail'] ?: $game['image'];
     $rating = $game['bgg_rating'] ?? null;
@@ -13,7 +13,7 @@ function render_game_card(array $game, array $owners = []): void
         $primaryCategory = $categories[0] ?? null;
     }
     ?>
-    <a class="game-card" href="/game.php?id=<?= (int) $game['id'] ?>">
+    <a class="game-card" href="<?= h(game_url((int) $game['id'], $from)) ?>">
       <?php if ($cover): ?>
         <img src="<?= h($cover) ?>" alt="<?= h($game['name']) ?>" loading="lazy">
       <?php else: ?>
@@ -39,8 +39,9 @@ function render_game_card(array $game, array $owners = []): void
  * @param array<int, array{game?: array, owners?: array}> $entries either raw
  *        game rows, or {game, owners} pairs (as returned by
  *        get_playgroup_collection()).
+ * @param ?string $from nav_links() key to breadcrumb back to
  */
-function render_game_grid(array $entries, string $emptyMessage = 'No games added yet.'): void
+function render_game_grid(array $entries, string $emptyMessage = 'No games added yet.', ?string $from = null): void
 {
     if (empty($entries)) {
         echo '<p class="empty-state">' . h($emptyMessage) . '</p>';
@@ -49,9 +50,9 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
     echo '<div class="game-grid">';
     foreach ($entries as $entry) {
         if (isset($entry['game'])) {
-            render_game_card($entry['game'], $entry['owners'] ?? []);
+            render_game_card($entry['game'], $entry['owners'] ?? [], $from);
         } else {
-            render_game_card($entry);
+            render_game_card($entry, [], $from);
         }
     }
     echo '</div>';
@@ -61,12 +62,17 @@ function render_game_grid(array $entries, string $emptyMessage = 'No games added
  * A recommendation card for a BGG hot-list item — not necessarily cached
  * locally yet, so it links through view-bgg.php instead of a local game id.
  * @param array{bggId:int, rank:int, name:string, yearPublished:?int, thumbnail:?string, image:?string} $item
+ * @param ?string $from nav_links() key to breadcrumb back to
  */
-function render_hot_game_card(array $item): void
+function render_hot_game_card(array $item, ?string $from = null): void
 {
     $cover = $item['image'] ?? $item['thumbnail'] ?? null;
+    $href = '/view-bgg.php?bggId=' . (int) $item['bggId'];
+    if (valid_nav_from($from) !== null) {
+        $href .= '&from=' . urlencode($from);
+    }
     ?>
-    <a class="game-card" href="/view-bgg.php?bggId=<?= (int) $item['bggId'] ?>">
+    <a class="game-card" href="<?= h($href) ?>">
       <?php if ($cover): ?>
         <img src="<?= h($cover) ?>" alt="<?= h($item['name']) ?>" loading="lazy">
       <?php else: ?>
@@ -101,13 +107,13 @@ function render_tag_chips(string $label, array $tags, int $visibleLimit = 6): vo
     echo '</div>';
 }
 
-/** "Similar games" cards: cover + title + one-line tagline, in a responsive grid. */
-function render_similar_game_cards(array $games): void
+/** "Similar games" cards: cover + title + one-line tagline, in a responsive grid. @param ?string $from nav_links() key to breadcrumb back to */
+function render_similar_game_cards(array $games, ?string $from = null): void
 {
     echo '<div class="similar-cards">';
     foreach ($games as $g) {
         $cover = $g['thumbnail'] ?: $g['image'];
-        echo '<a class="similar-card" href="/game.php?id=' . (int) $g['id'] . '">';
+        echo '<a class="similar-card" href="' . h(game_url((int) $g['id'], $from)) . '">';
         if ($cover) {
             echo '<img src="' . h($cover) . '" alt="" loading="lazy">';
         } else {
