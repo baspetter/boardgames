@@ -85,14 +85,9 @@ function youtube_search_url(string $gameName): string
     return 'https://www.youtube.com/results?search_query=' . urlencode($gameName . ' how to play');
 }
 
-/** @return array<string, string> shop label => search URL for $gameName, for "where to buy" links. */
-function shop_search_urls(string $gameName): array
+function google_shopping_search_url(string $gameName): string
 {
-    return [
-        'Bol.com' => 'https://www.bol.com/nl/nl/s/?searchtext=' . urlencode($gameName),
-        'Amazon.nl' => 'https://www.amazon.nl/s?k=' . urlencode($gameName),
-        'Google Shopping' => 'https://www.google.com/search?tbm=shop&q=' . urlencode($gameName),
-    ];
+    return 'https://www.google.com/search?tbm=shop&q=' . urlencode($gameName);
 }
 
 /** Canonical top-level nav pages: key => [href, label]. Shared by the site nav and the game-detail "from" breadcrumb. */

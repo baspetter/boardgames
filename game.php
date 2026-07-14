@@ -60,9 +60,7 @@ require __DIR__ . '/includes/header.php';
         <button type="button" class="btn btn-secondary" data-action="remove-from-wishlist" data-game-id="<?= $gameId ?>">Remove from wishlist</button>
         <div class="buy-links">
           <span class="hint">Where to buy:</span>
-          <?php foreach (shop_search_urls($game['name']) as $shopLabel => $shopUrl): ?>
-            <a href="<?= h($shopUrl) ?>" target="_blank" rel="noreferrer"><?= h($shopLabel) ?></a>
-          <?php endforeach; ?>
+          <a href="<?= h(google_shopping_search_url($game['name'])) ?>" target="_blank" rel="noreferrer">Google Shopping</a>
         </div>
       <?php else: ?>
         <button type="button" class="btn btn-accent" data-action="add-to-collection" data-game-id="<?= $gameId ?>">+ Add to my collection</button>
