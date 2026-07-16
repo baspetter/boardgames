@@ -13,7 +13,7 @@ if (!$game) {
 }
 
 $owners = get_visible_owners($gameId, $userId);
-$stmt = db()->prepare('SELECT id FROM collection_entries WHERE user_id = ? AND game_id = ?');
+$stmt = db()->prepare('SELECT * FROM collection_entries WHERE user_id = ? AND game_id = ?');
 $stmt->execute([$userId, $gameId]);
 $myEntry = $stmt->fetch();
 
@@ -55,6 +55,14 @@ require __DIR__ . '/includes/header.php';
     <div class="game-detail-actions">
       <?php if ($myEntry): ?>
         <button type="button" class="btn btn-secondary" data-action="remove-game" data-game-id="<?= $gameId ?>">Remove from my collection</button>
+        <?php if (!empty($myEntry['loaned_to'])): ?>
+          <div class="loan-status">
+            <span class="hint">Loaned to <strong><?= h($myEntry['loaned_to']) ?></strong><?php if ($myEntry['loaned_at']): ?> since <?= h(date('M j, Y', strtotime($myEntry['loaned_at']))) ?><?php endif; ?></span>
+            <button type="button" class="btn btn-secondary" data-action="mark-returned" data-game-id="<?= $gameId ?>">Mark as returned</button>
+          </div>
+        <?php else: ?>
+          <button type="button" class="btn btn-secondary" data-action="mark-loaned" data-game-id="<?= $gameId ?>">Mark as loaned out</button>
+        <?php endif; ?>
       <?php elseif ($myWishlistEntry): ?>
         <button type="button" class="btn btn-accent" data-action="move-to-collection" data-game-id="<?= $gameId ?>">+ Move to my collection</button>
         <button type="button" class="btn btn-secondary" data-action="remove-from-wishlist" data-game-id="<?= $gameId ?>">Remove from wishlist</button>

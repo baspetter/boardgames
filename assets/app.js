@@ -249,6 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (action === 'remove-game' && !confirm('Remove from your collection?')) {
         return;
       }
+      let loanedTo;
+      if (action === 'mark-loaned') {
+        loanedTo = prompt('Who did you lend this to?');
+        if (!loanedTo || !loanedTo.trim()) return;
+        loanedTo = loanedTo.trim();
+      }
       const urls = {
         'remove-game': '/api/remove-game.php',
         'add-to-collection': '/api/add-game.php',
@@ -256,6 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'add-to-wishlist': '/api/add-game.php',
         'remove-from-wishlist': '/api/remove-game.php',
         'move-to-collection': '/api/move-to-collection.php',
+        'mark-loaned': '/api/set-loan.php',
+        'mark-returned': '/api/set-loan.php',
       };
       const payloads = {
         'remove-game': { gameId },
@@ -264,6 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'add-to-wishlist': { gameId, target: 'wishlist' },
         'remove-from-wishlist': { gameId, target: 'wishlist' },
         'move-to-collection': { gameId },
+        'mark-loaned': { gameId, loanedTo },
+        'mark-returned': { gameId, loanedTo: '' },
       };
       btn.disabled = true;
       postJson(urls[action], payloads[action])

@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS collection_entries (
   user_id     INT NOT NULL,
   game_id     INT NOT NULL,
   notes       TEXT NULL,
+  loaned_to   VARCHAR(100) NULL,      -- name of who this copy is currently lent out to, NULL if not loaned
+  loaned_at   DATETIME NULL,          -- when it was marked as loaned out
   added_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uniq_entry (user_id, game_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

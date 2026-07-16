@@ -570,6 +570,17 @@ input:focus, textarea:focus, select:focus {
   flex-direction: column;
   gap: 0.5rem;
 }
+.loan-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+}
 .buy-links {
   display: flex;
   flex-wrap: wrap;
