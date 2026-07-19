@@ -104,6 +104,11 @@ function bgg_search(string $query): array
                 break;
             }
         }
+        // Fall back to whatever name BGG did list, in case none is marked
+        // "primary" (happens for some newly-added or oddly-tagged entries).
+        if ($primary === null && isset($item->name[0])) {
+            $primary = (string) $item->name[0]['value'];
+        }
         $year = isset($item->yearpublished) ? (int) $item->yearpublished['value'] : null;
         $results[] = ['bggId' => $bggId, 'name' => $primary ?? 'Unknown', 'yearPublished' => $year ?: null];
     }
@@ -157,6 +162,11 @@ function bgg_get_hot_list(): array
                 $primary = (string) $name['value'];
                 break;
             }
+        }
+        // Fall back to whatever name BGG did list, in case none is marked
+        // "primary" (happens for some newly-added or oddly-tagged entries).
+        if ($primary === null && isset($item->name[0])) {
+            $primary = (string) $item->name[0]['value'];
         }
         $results[] = [
             'bggId' => $bggId,
@@ -245,6 +255,11 @@ function bgg_get_thing(int $bggId): array
             $primaryName = (string) $name['value'];
             break;
         }
+    }
+    // Fall back to whatever name BGG did list, in case none is marked
+    // "primary" (happens for some newly-added or oddly-tagged entries).
+    if ($primaryName === null && isset($item->name[0])) {
+        $primaryName = (string) $item->name[0]['value'];
     }
 
     $categories = [];
