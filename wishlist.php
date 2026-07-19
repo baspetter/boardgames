@@ -57,7 +57,7 @@ require __DIR__ . '/includes/header.php';
   <p class="empty-state">No recommendations found right now.</p>
 <?php else: ?>
   <div class="game-grid">
-    <?php foreach (array_slice($hotList, 0, 12) as $item): ?>
+    <?php foreach ($hotList as $item): ?>
       <?php render_hot_game_card($item, 'wishlist'); ?>
     <?php endforeach; ?>
   </div>
